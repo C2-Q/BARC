@@ -1,0 +1,5 @@
+1. Slack-based compressibility still separates the families: high=1.000, medium=0.792, low=0.000.
+2. Against the original baseline, smoothed changes executed makespan by mean gain=-0.013; The stronger baseline absorbs most of the benefit: mean gain vs capacity_aware_static=-0.040, stall-regime gain vs capacity_aware_static=-0.036. The paper claim should therefore be narrowed to objective mismatch plus shaping as one intervention, not a generally preferred strategy.
+3. Shallower-but-slower remains frequent against static_min (ratio=0.153) and is rarer against capacity_aware_static (ratio=0.000).
+4. Delta_max remains strongly predictive of stall thresholds in the representative buffer scan, with agreement=0.778.
+5. The structural boundary remains visible, with high slack in high_compressibility and zero slack in low_compressibility. In the same scan, high_compressibility has smoothed normalized makespan=1.329, while capacity_aware_static reaches 1.000; medium_compressibility is closer to the capacity-aware baseline at smoothed=1.089.

@@ -1,0 +1,17 @@
+task,metric,predictor_class,evaluated_slices,mean_best_accuracy,mean_roc_auc
+stall,peak_demand,trace_level,96,1.0,1.0
+stall,gamma,trace_level,96,1.0,1.0
+stall,delta_max,system_level,96,0.9979166666666667,0.9978608630952381
+stall,slack_ratio,structural,96,0.9444444444444443,0.974702380952381
+stall,T_depth,traditional,96,0.9326388888888889,0.966889880952381
+stall,mean_demand,trace_level,96,0.9326388888888889,0.966889880952381
+stall,T_count,traditional,96,0.9319444444444445,0.9667038690476191
+stall,mean_t_slack,structural,96,0.8902777777777781,0.8253199404761903
+inversion,gamma,trace_level,57,0.935672514619883,0.9418707543268947
+inversion,delta_max,system_level,57,0.9099415204678364,0.9225556282573827
+inversion,slack_ratio,structural,57,0.857309941520468,0.9025189852382833
+inversion,peak_demand,trace_level,57,0.9076023391812867,0.8993174012472257
+inversion,T_count,traditional,57,0.8538011695906433,0.8984654396935098
+inversion,T_depth,traditional,57,0.8584795321637427,0.8937107466932028
+inversion,mean_demand,trace_level,57,0.8584795321637427,0.8937107466932027
+inversion,mean_t_slack,structural,57,0.8257309941520469,0.659213307809799

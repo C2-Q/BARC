@@ -1,0 +1,13 @@
+group,task,metric,mean_diff,ci_lower,ci_upper,ci_excludes_zero
+ALL,stall,auc,0.00722211958857197,0.0024950177118970656,0.012087925038886267,True
+high_compressibility,stall,auc,0.0,0.0,0.0,False
+medium_compressibility,stall,auc,0.05027760965767797,-0.011175918405802062,0.09669049990481217,False
+low_compressibility,stall,auc,,,,False
+ALL,slowdown_ratio,abs_spearman,0.005876112614156136,-0.0018831617134585448,0.013834168390190676,False
+high_compressibility,slowdown_ratio,abs_spearman,,,,False
+medium_compressibility,slowdown_ratio,abs_spearman,0.06290888624124599,-0.01835936910893596,0.139926961709395,False
+low_compressibility,slowdown_ratio,abs_spearman,,,,False
+ALL,inversion,auc,0.012618017959442,0.00816206606201795,0.017946110158293633,True
+high_compressibility,inversion,auc,0.0,0.0,0.0,False
+medium_compressibility,inversion,auc,-0.20900613936461254,-0.25837885722722576,-0.15681172060576598,True
+low_compressibility,inversion,auc,,,,False

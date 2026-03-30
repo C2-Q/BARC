@@ -1,0 +1,17 @@
+policy,left_metric,right_metric,pearson,spearman
+capacity_aware_static,slack_ratio,peak_demand,0.6951990456387314,0.7063315710103213
+capacity_aware_static,slack_ratio,delta_max,0.0,0.0
+capacity_aware_static,delta_max,stall_observed,0.0,0.0
+capacity_aware_static,delta_max,slowdown_ratio,0.0,0.0
+smoothed,slack_ratio,peak_demand,0.8955054987080486,0.971854471879054
+smoothed,slack_ratio,delta_max,0.311558596212018,0.35519773698151164
+smoothed,delta_max,stall_observed,0.9032966913361433,0.9956280893840439
+smoothed,delta_max,slowdown_ratio,0.974776922973376,0.999880602264456
+static_min,slack_ratio,peak_demand,0.9569045590286409,0.9866649157845689
+static_min,slack_ratio,delta_max,0.4673073732855758,0.6381777922594913
+static_min,delta_max,stall_observed,0.736950978570749,0.9640740191544509
+static_min,delta_max,slowdown_ratio,0.927399664151192,0.9987592413627395
+ALL,slack_ratio,peak_demand,0.7510528171762194,0.8165679041261382
+ALL,slack_ratio,delta_max,0.30879015383941216,0.3845810113573933
+ALL,delta_max,stall_observed,0.8160614866582108,0.9921036612358685
+ALL,delta_max,slowdown_ratio,0.9467813433721887,0.9998225962838871

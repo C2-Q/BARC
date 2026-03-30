@@ -1,0 +1,3 @@
+The largest exact QFT instance that completed the full bounded-delivery scan is n=8. It has slack_ratio=0.632, mean_t_slack=6902.833, delta_max_mean=43395.857, and the closest synthetic family is medium_compressibility. Inversion was not observed in the scanned (C,B) grid.
+Exact QFT sizes 12, 16 exceeded the full-grid evaluation budget after trace extraction and were recorded as trace_only. This indicates that exact Clifford+T expansion, rather than schedule inversion alone, becomes the dominant practical limitation at larger QFT sizes.
+Across the fully evaluated QFT sizes, bounded-delivery pressure appears as follows: n=8: slowdown fraction=0.205.

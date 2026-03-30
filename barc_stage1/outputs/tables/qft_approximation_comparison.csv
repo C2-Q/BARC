@@ -1,0 +1,3 @@
+variant,trace_name,n_bits,approximation_degree,T_count,dag_depth,trace_length,peak_demand,slack_ratio,mean_t_slack,status,delta_max_mean,delta_max_max,frac_CB_with_slowdown,frac_CB_with_stall,inversion_observed,closest_synthetic_family
+exact,qft_n12,12,0,2146209,932784,932784,10,0.7609804077794846,8916.374902444264,trace_only,,,,,0,medium_compressibility
+approx_deg_4,qft_n12,12,4,1759401,932784,932784,6,0.7084314491125104,7405.426205282366,trace_only,,,,,0,medium_compressibility

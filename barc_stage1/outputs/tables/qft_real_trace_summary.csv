@@ -1,0 +1,4 @@
+trace_name,n_bits,T_count,T_depth,trace_length,peak_demand,slack_ratio,mean_t_slack,closest_synthetic_family,status,reason,delta_max_mean,delta_max_max,frac_CB_with_slowdown,frac_CB_with_stall,inversion_observed
+qft_n8,8,821077,549736,549736,6,0.6318274656335521,6902.8326198395525,medium_compressibility,full_eval,within_trace_budget,43395.857142857145,303771.0,0.20535714285714285,0.4642857142857143,0
+qft_n12,12,2146209,932784,932784,10,0.7609804077794846,8916.374902444264,medium_compressibility,trace_only,trace_too_large_for_full_grid,,,,,0
+qft_n16,16,4076529,1315832,1315832,14,0.8224778972503324,11940.523463711408,medium_compressibility,trace_only,trace_too_large_for_full_grid,,,,,0

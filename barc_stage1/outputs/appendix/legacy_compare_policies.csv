@@ -1,0 +1,4 @@
+family,seed,policy,capacity_limit_mode,capacity_limit,C,B,feasible,feasible_reason,compressibility,compressibility_slack_ratio,compressibility_mean_t_slack,T_static,T_exe,stall_cycles,stall_ratio,Delta_max,Gamma,peak_demand,mean_demand,total_T,QTV_proxy,normalized_makespan
+high_compressibility,7,static_min,none,0,3,3,1,feasible,0.4778325123152709,1.0,3.3448275862068964,8,12.0,4.0,0.3333333333333333,11,11,6,3.625,29,169.0,1.5
+high_compressibility,7,capacity_aware_static,C,3,3,3,1,feasible,0.4778325123152709,1.0,3.3448275862068964,11,11.0,0.0,0.0,0,0,3,2.6363636363636362,29,148.0,1.0
+high_compressibility,7,smoothed,none,0,3,3,1,feasible,0.4778325123152709,1.0,3.3448275862068964,10,10.0,0.0,0.0,0,0,3,2.9,29,160.0,1.0

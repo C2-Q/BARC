@@ -1,0 +1,5 @@
+1. Static-depth objective does fail: the representative static_min schedule still exhibits slowdown and inversion regimes.
+2. slack_ratio has a larger observed association than T_depth among the tested structure-aware metrics: stall ROC-AUC=0.975 vs T_depth=0.967; slowdown |Spearman|=0.813 vs T_depth=0.804.
+3. Delta_max has the highest observed association among the immediate trace-level variables: stall ROC-AUC=0.998, slowdown |Spearman|=0.992, Delta_max-stall Spearman=0.992.
+4. capacity_aware_static resolves much of the mismatch in the current scan: in high_compressibility its mean normalized makespan is 1.000, while smoothed remains at 1.329.
+5. smoothed is therefore treated here as an intervention class / design-space example rather than a universally preferred scheduling policy.

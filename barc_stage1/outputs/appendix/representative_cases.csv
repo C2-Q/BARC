@@ -1,0 +1,4 @@
+family,seed,C,B,T_static_static_min,T_static_capacity_aware_static,T_static_smoothed,T_exe_static_min,T_exe_capacity_aware_static,T_exe_smoothed,delta_max_static_min,delta_max_capacity_aware_static,delta_max_smoothed,stall_cycles_static_min,stall_cycles_capacity_aware_static,stall_cycles_smoothed,relative_T_exe_improvement_static_min_vs_smoothed,relative_T_exe_improvement_capacity_aware_vs_smoothed
+high_compressibility,3,2,6,8,15,10,17.0,15.0,15.0,17,0,9,9.0,0.0,5.0,0.11764705882352941,0.0
+medium_compressibility,5,2,1,14,17,14,15.0,17.0,14.0,1,0,0,1.0,0.0,0.0,0.06666666666666667,0.17647058823529413
+low_compressibility,1,1,0,42,42,42,42.0,42.0,42.0,0,0,0,0.0,0.0,0.0,0.0,0.0

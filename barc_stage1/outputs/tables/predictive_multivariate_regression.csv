@@ -1,0 +1,7 @@
+model,feature,predictor_class,standardized_coefficient,slice_C,slice_B,model_r_squared,delta_r_squared_vs_prev
+T_depth_only,T_depth,traditional,-0.729876514908781,2,6,0.5327197270153881,0.5327197270153881
+T_depth_plus_slack,T_depth,traditional,-0.01070801533681931,2,6,0.536962076116575,0.004242349101186926
+T_depth_plus_slack,slack_ratio,structural,0.722111957993893,2,6,0.536962076116575,0.004242349101186926
+T_depth_slack_delta,T_depth,traditional,-0.4245066402920692,2,6,0.9984011152505055,0.4614390391339305
+T_depth_slack_delta,slack_ratio,structural,-0.5296297398011901,2,6,0.9984011152505055,0.4614390391339305
+T_depth_slack_delta,delta_max,system_level,1.0806527204896494,2,6,0.9984011152505055,0.4614390391339305

@@ -1,0 +1,5 @@
+trace_name,policy,representative_B,representative_C,critical_capacity,critical_buffer,stall_saturation_buffer,Delta_max,peak_demand,mean_demand
+adder_n4,static_min,0,1,2,1,1,0,2,0.5714285714285714
+adder_n4,smoothed,0,1,1,0,0,0,1,0.5714285714285714
+multiplier_n4,static_min,0,1,4,-1,7,5,4,0.7081824764663287
+multiplier_n4,smoothed,0,1,1,0,0,0,1,0.7081824764663287

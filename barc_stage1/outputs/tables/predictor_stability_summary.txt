@@ -1,0 +1,3 @@
+For stall, the subgroup leader is Delta_max overall; first-place counts across subsets are Delta_max=10, slack_ratio=2, T_depth=2.
+For slowdown, the subgroup leader is Delta_max overall; first-place counts across subsets are Delta_max=10, slack_ratio=1, T_depth=1.
+Family-level leaders: high_compressibility: stall=Delta_max, slowdown=Delta_max; medium_compressibility: stall=Delta_max, slowdown=Delta_max; low_compressibility: stall=T_depth, slowdown=T_depth.

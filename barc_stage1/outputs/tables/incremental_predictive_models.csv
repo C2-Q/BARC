@@ -1,0 +1,7 @@
+task,model,features,metric_name,metric_value,delta_metric_vs_prev,num_rows,intercept,coefficients_json
+slowdown_ratio,T_depth_only,T_depth,r_squared,0.12070872881303818,0.12070872881303818,1567,1.522212505844976,"{""T_depth"": -0.013385606513630778}"
+slowdown_ratio,T_depth_plus_slack,T_depth|slack_ratio,r_squared,0.12104250904621272,0.000333780233174541,1567,1.1956318890722295,"{""T_depth"": -0.005606811539173573, ""slack_ratio"": 0.26488129827573026}"
+slowdown_ratio,T_depth_slack_delta,T_depth|slack_ratio|Delta_max,r_squared,0.865024236561309,0.7439817275150963,1567,1.094347505486958,"{""Delta_max"": 0.09441986437804717, ""T_depth"": -0.0021788313583076986, ""slack_ratio"": -0.17585570092804087}"
+stall,T_depth_only,T_depth,auc,0.8568380746495111,0.8568380746495111,1680,2.8866273504419646,"{""T_depth"": -0.23318903892069348}"
+stall,T_depth_plus_slack,T_depth|slack_ratio,auc,0.8626682017701662,0.005830127120655115,1680,-2.1829812672442697,"{""T_depth"": -0.11313742877189238, ""slack_ratio"": 4.1103152198124695}"
+stall,T_depth_slack_delta,T_depth|slack_ratio|Delta_max,auc,0.9993332404514061,0.13666503868123991,1680,-20.130412774673427,"{""Delta_max"": 9.880692812095525, ""T_depth"": 0.29496993258640747, ""slack_ratio"": 13.079285987443603}"

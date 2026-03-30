@@ -1,0 +1,3 @@
+trace_name,policy,representative_B,representative_C,critical_capacity,critical_buffer,stall_saturation_buffer,Delta_max,peak_demand,mean_demand
+qft_n8,static_min,0,2,6,-1,15,303771,6,1.4935841931399798
+qft_n8,smoothed,0,2,2,0,0,303771,2,1.4935841931399798

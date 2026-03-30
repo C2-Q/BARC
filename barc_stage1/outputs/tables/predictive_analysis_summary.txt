@@ -1,0 +1,7 @@
+1. Structural predictors: slack_ratio outperforms T_depth for slowdown (0.813 vs 0.804 mean |Spearman|) and for stall (0.975 vs 0.967 mean ROC-AUC).
+2. Immediate system predictors: Delta_max has the highest observed association with slowdown (0.992 mean |Spearman|) and stall (0.998 mean ROC-AUC).
+3. For inversion prediction, slack_ratio=0.903, T_depth=0.894, Delta_max=0.923 mean ROC-AUC.
+4. Incremental model fits remain consistent with a layered interpretation: adding slack_ratio to T_depth changes slowdown R^2 by 0.000 and stall AUC by 0.006; adding Delta_max changes slowdown R^2 by 0.744 and stall AUC by 0.137.
+5. The causal chain is consistent with the data: Spearman(slack_ratio, Delta_max)=0.385, Spearman(Delta_max, stall)=0.992.
+6. In the representative bounded-delivery slice (C=2, B=6), lower-slack workloads have mean shaping gain=0.021, higher-slack workloads have mean shaping gain=0.127; the largest standardized regression coefficient is associated with Delta_max.
+7. The fixed-schedule lower bound tracks executed makespan closely: Pearson(predicted lower bound, T_exe)=0.988, mean slack above the bound=0.693 cycles.

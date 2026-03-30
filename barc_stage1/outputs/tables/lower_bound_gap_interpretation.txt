@@ -1,0 +1,2 @@
+The lower bound is exact when the observed backlog is resolved within the delivery-plus-buffer budget. In the current scan, the largest separation between gap=0 and gap>0 occurs for delta_max, with p-value=0 and rank-biserial effect size=1.000.
+Positive bound gaps are associated with larger delta_max and smaller effective delivery slack, which indicates that additional waiting arises when prefix deficits persist beyond the buffer budget rather than from the bound formula itself.

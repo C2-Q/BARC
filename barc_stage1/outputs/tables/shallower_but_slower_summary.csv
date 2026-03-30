@@ -1,0 +1,5 @@
+family,count,total_experiments,both_feasible_experiments,fraction_of_total,fraction_of_both_feasible
+high_compressibility,200,560,479,0.35714285714285715,0.4175365344467641
+low_compressibility,0,560,560,0.0,0.0
+medium_compressibility,40,560,528,0.07142857142857142,0.07575757575757576
+ALL,240,1680,1567,0.14285714285714285,0.15315890236119975

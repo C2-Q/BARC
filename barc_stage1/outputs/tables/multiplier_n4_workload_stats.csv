@@ -1,0 +1,2 @@
+trace_name,timesteps,total_T,mean_demand,max_demand,compressibility_proxy,burst_threshold,spike_count,average_burst_length,max_burst_length,burst_count,demand_level_proportions,zoom_start,zoom_end
+multiplier_n4,1381,978,0.7081824764663287,4,1.0729893953093352,2,244,1.0252100840336134,3,238,"{""0"": 0.4721216509775525, ""1"": 0.35119478638667634, ""2"": 0.17451122375090514, ""3"": 0.000724112961622013, ""4"": 0.001448225923244026}",1182,1262

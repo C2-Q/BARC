@@ -1,0 +1,4 @@
+family,seed,C,policy,delta_max,transition_B
+high_compressibility,7,5,static_min,3,3
+high_compressibility,7,5,capacity_aware_static,0,0
+high_compressibility,7,5,smoothed,0,0

@@ -1,0 +1,12 @@
+# Workspace-local editor, cache, and OS files.
+.DS_Store
+*.pyc
+__pycache__/
+.pytest_cache/
+.idea/
+
+# Local archival area for reviewer-clean repository snapshots.
+barc_stage1/outputs/archive/
+
+# Generated manuscript-facing submission package.
+submission_bundle/

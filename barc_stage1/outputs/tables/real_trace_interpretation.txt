@@ -1,2 +1,0 @@
-The adder trace has slack_ratio=0.357 and mean delta_max=0.000, which places it near low_compressibility and limits the number of (C,B) settings with slowdown above 1.05 to 0.009 of the scan.
-The multiplier trace has slack_ratio=0.347 and mean delta_max=1.000; it therefore produces bounded-delivery pressure more often than the adder, but the observed slack remains below the synthetic high-slack regime, which is consistent with the weaker inversion signal.

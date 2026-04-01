@@ -295,11 +295,11 @@ def plot_qft_reduced_grid_summary(summary_df: pd.DataFrame) -> Path:
             if column == "mean_delta_max":
                 label_offset = max(0.02 * max(values, default=1.0), 5000.0)
                 axis.text(index, value + label_offset, f"{value:.2f}", ha="center", va="bottom", fontsize=8)
-                axis.set_ylim(0.0, max(values, default=1.0) * 1.12)
+                axis.set_ylim(0.0, max(values, default=1.0) * 1.18)
             else:
-                label_offset = 0.025 if value < 0.95 else 0.02
-                axis.text(index, min(value + label_offset, 1.03), f"{value:.2f}", ha="center", va="bottom", fontsize=8)
-                axis.set_ylim(0.0, 1.05)
+                label_offset = 0.025 if value < 0.95 else 0.015
+                axis.text(index, value + label_offset, f"{value:.2f}", ha="center", va="bottom", fontsize=8)
+                axis.set_ylim(0.0, 1.08)
         axis.set_xticks(range(len(variants)), variants)
         axis.set_ylabel(ylabel)
         axis.grid(axis="y", alpha=0.18)

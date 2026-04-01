@@ -271,10 +271,10 @@ def plot_qft_vs_other_real_traces(qft_summary_df: pd.DataFrame, scaling_summary_
 
     axes[1].bar(labels, delta_values, color=colors, width=0.65)
     for index, value in enumerate(delta_values):
-        label_y = value * 1.06 + max(0.12, 0.015 * max(delta_values, default=1.0))
+        label_y = value * 1.08 + max(0.2, 0.02 * max(delta_values, default=1.0))
         axes[1].text(index, label_y, f"{value:.1f}", ha="center", va="bottom", fontsize=9)
     axes[1].set_yscale("symlog", linthresh=1.0)
-    axes[1].set_ylim(0.0, max(max(delta_values, default=1.0) * 1.7, 10.0))
+    axes[1].set_ylim(0.0, max(max(delta_values, default=1.0) * 2.1, 10.0))
     axes[1].set_ylabel(r"Mean $\Delta_{\max}$")
     axes[1].set_title("Delivery pressure")
     axes[1].tick_params(axis="x", rotation=15)

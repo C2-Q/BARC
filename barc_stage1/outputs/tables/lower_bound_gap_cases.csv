@@ -1,5 +1,5 @@
 case_id,family,seed,policy,C,B,T_static,T_exe,delta_max,gap,slack_ratio,peak_demand,mean_demand
-case_1,medium_compressibility,1,smoothed,1,3,19,25.0,6,3.0,0.68,2,1.3157894736842106
-case_2,high_compressibility,1,smoothed,2,6,10,15.0,9,3.5,1.0,3,2.9
+case_1,high_compressibility,1,smoothed,1,3,10,29.0,19,3.0,1.0,3,2.9
+case_2,medium_compressibility,1,smoothed,1,3,19,25.0,6,3.0,0.68,2,1.3157894736842106
 case_3,high_compressibility,1,smoothed,1,8,10,29.0,19,8.0,1.0,3,2.9
 case_4,high_compressibility,1,smoothed,1,12,10,29.0,19,12.0,1.0,3,2.9

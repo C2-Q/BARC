@@ -368,9 +368,24 @@ def _reconstruct_gap_case(row: pd.Series | object) -> dict[str, object]:
     backlog = np.maximum(0, cumulative_demand - supply_envelope)
     peak_index = int(np.argmax(backlog)) if len(backlog) > 0 else 0
     active = np.where(backlog > 0)[0]
-    persistence_length = int(len(active)) if len(active) > 0 else 0
-    window_start = max(0, peak_index - 4)
-    window_end = min(len(trace_bundle.demand), peak_index + 5)
+    active_segments: list[tuple[int, int]] = []
+    if len(active) > 0:
+        segment_start = int(active[0])
+        previous = int(active[0])
+        for index in active[1:]:
+            current = int(index)
+            if current == previous + 1:
+                previous = current
+                continue
+            active_segments.append((segment_start, previous + 1))
+            segment_start = current
+            previous = current
+        active_segments.append((segment_start, previous + 1))
+    peak_segment = next(
+        ((segment_start, segment_end) for segment_start, segment_end in active_segments if segment_start <= peak_index < segment_end),
+        None,
+    )
+    persistence_length = int(peak_segment[1] - peak_segment[0]) if peak_segment is not None else 0
     return {
         "demand": trace_bundle.demand,
         "cumulative_demand": cumulative_demand,
@@ -378,8 +393,8 @@ def _reconstruct_gap_case(row: pd.Series | object) -> dict[str, object]:
         "backlog": backlog,
         "peak_index": peak_index,
         "persistence_length": persistence_length,
-        "window_start": window_start,
-        "window_end": window_end,
+        "active_segments": active_segments,
+        "peak_segment": peak_segment,
         "sim_result": sim_result,
         "row": row,
     }
@@ -392,21 +407,25 @@ def _plot_gap_case_row(axes_row: np.ndarray, reconstruction: dict[str, object], 
     supply_envelope = np.array(reconstruction["supply_envelope"], dtype=int)
     backlog = np.array(reconstruction["backlog"], dtype=int)
     peak_index = int(reconstruction["peak_index"])
-    window_start = int(reconstruction["window_start"])
-    window_end = int(reconstruction["window_end"])
+    active_segments = list(reconstruction["active_segments"])
+    peak_segment = reconstruction["peak_segment"]
     row = reconstruction["row"]
 
     x_values = np.arange(len(demand))
     left_axis.plot(x_values, cumulative_demand, color="#1f77b4", linewidth=1.5, label="Cumulative demand")
     left_axis.plot(x_values, supply_envelope, color="#444444", linewidth=1.2, linestyle="--", label="Supply envelope")
-    left_axis.fill_between(x_values, supply_envelope, cumulative_demand, where=cumulative_demand > supply_envelope, color="#e45756", alpha=0.18)
+    left_axis.fill_between(x_values, supply_envelope, cumulative_demand, where=backlog > 0, color="#e45756", alpha=0.18)
     left_axis.axvline(peak_index, color="#777777", linewidth=0.9, linestyle=":")
     left_axis.set_ylabel(f"{case_id}\nCumulative T")
     left_axis.grid(alpha=0.18)
     left_axis.legend(frameon=False, fontsize=8, loc="upper left")
 
     right_axis.step(x_values, demand, where="post", color="#2c7fb8", linewidth=1.3)
-    right_axis.axvspan(window_start, max(window_start + 1, window_end), color="#fdd0a2", alpha=0.25)
+    for segment_start, segment_end in active_segments:
+        right_axis.axvspan(segment_start, segment_end, color="#e45756", alpha=0.18)
+    if peak_segment is not None:
+        right_axis.axvline(peak_segment[0], color="#777777", linewidth=0.8, linestyle=":")
+        right_axis.axvline(peak_segment[1], color="#777777", linewidth=0.8, linestyle=":")
     right_axis.set_ylabel("Demand")
     right_axis.grid(alpha=0.18)
     right_axis.set_title(

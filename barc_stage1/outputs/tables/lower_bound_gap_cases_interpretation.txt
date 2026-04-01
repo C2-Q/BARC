@@ -1,5 +1,0 @@
-The selected positive-gap cases show that the lower bound becomes loose when the prefix deficit does not resolve at a single logical cycle boundary. Instead, demand remains above the supply envelope across a short interval, which forces additional waiting beyond the one-shot deficit term in the bound.
-case_1: medium_compressibility, seed=1, policy=smoothed, C=1, B=3, gap=3.00. The cumulative demand exceeds the supply envelope near logical cycle 17, and the backlog remains active for 6 logical cycles.
-case_2: high_compressibility, seed=1, policy=smoothed, C=2, B=6, gap=3.50. The cumulative demand exceeds the supply envelope near logical cycle 8, and the backlog remains active for 4 logical cycles.
-case_3: high_compressibility, seed=1, policy=smoothed, C=1, B=8, gap=8.00. The cumulative demand exceeds the supply envelope near logical cycle 9, and the backlog remains active for 6 logical cycles.
-case_4: high_compressibility, seed=1, policy=smoothed, C=1, B=12, gap=12.00. The cumulative demand exceeds the supply envelope near logical cycle 9, and the backlog remains active for 4 logical cycles.

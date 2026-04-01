@@ -1,8 +1,12 @@
-# BARC Stage 1 Artifact
+# BARC QCE Submission Artifact
 
 ## Overview
 
-This repository accompanies a paper on bounded T-state delivery in fault-tolerant quantum execution. The artifact studies how circuit dependency structure interacts with a fixed delivery rate `C` and a fixed buffer capacity `B`.
+This repository accompanies the QCE submission:
+
+`When Depth Misleads: Predictive Modeling of Quantum Execution Stalls under Bounded Magic-State Delivery`
+
+The artifact studies how circuit dependency structure interacts with a fixed delivery rate `C` and a fixed buffer capacity `B`, and packages the paper-facing figures and tables used by the manuscript.
 
 The main outputs of the artifact are:
 
@@ -35,19 +39,27 @@ against the simulated executed makespan `T_exe`.
 Install dependencies:
 
 ```bash
-pip install -r requirements.txt
+python -m pip install -r barc_stage1/requirements.txt
 ```
 
-Run the full paper pipeline:
+Run the full paper pipeline from the artifact root:
 
 ```bash
+cd barc_stage1
 python scripts/run_qce_paper.py
 ```
 
-Run the slack tests:
+Run the test suite:
 
 ```bash
+cd barc_stage1
 python -m unittest discover -s tests -p 'test_*.py'
+```
+
+Prepare a clean manuscript bundle containing the final PDF figures and key tables referenced by the paper:
+
+```bash
+python barc_stage1/scripts/prepare_submission_bundle.py
 ```
 
 The main pipeline generates:
@@ -56,28 +68,74 @@ The main pipeline generates:
 - paper-facing figures in `outputs/figures/`
 - secondary tables and figures in `outputs/appendix/`
 
+## Submission Assets
+
+The manuscript-facing files are split into two groups:
+
+- final PDF figures for LaTeX: `barc_stage1/outputs/figures/` and `barc_stage1/outputs/figures/final_paper/`
+- quantitative tables behind the reported claims: `barc_stage1/outputs/tables/`
+
+Running `python barc_stage1/scripts/prepare_submission_bundle.py` creates `submission_bundle/` at the repository root with:
+
+- `figures/` laid out to match the LaTeX `\includegraphics{figures/...}` paths
+- `tables/` containing the main CSV/TXT assets needed to audit manuscript claims
+- `MANIFEST.md` summarizing every copied file
+
+## Manuscript Figure Map
+
+These are the figure PDFs directly referenced by the current paper draft.
+
+- `figures/delta_max_illustration.pdf` -> [delta_max_illustration.pdf](/Users/mac/Documents/GitHub/BARC/barc_stage1/outputs/figures/delta_max_illustration.pdf)
+- `figures/final_paper/predictor_comparison_final.pdf` -> [predictor_comparison_final.pdf](/Users/mac/Documents/GitHub/BARC/barc_stage1/outputs/figures/final_paper/predictor_comparison_final.pdf)
+- `figures/final_paper/incremental_predictive_gain_final.pdf` -> [incremental_predictive_gain_final.pdf](/Users/mac/Documents/GitHub/BARC/barc_stage1/outputs/figures/final_paper/incremental_predictive_gain_final.pdf)
+- `figures/final_paper/structure_to_execution_chain_empirical_final.pdf` -> [structure_to_execution_chain_empirical_final.pdf](/Users/mac/Documents/GitHub/BARC/barc_stage1/outputs/figures/final_paper/structure_to_execution_chain_empirical_final.pdf)
+- `figures/final_paper/delta_max_vs_slowdown_final.pdf` -> [delta_max_vs_slowdown_final.pdf](/Users/mac/Documents/GitHub/BARC/barc_stage1/outputs/figures/final_paper/delta_max_vs_slowdown_final.pdf)
+- `figures/final_paper/lower_bound_vs_actual_final.pdf` -> [lower_bound_vs_actual_final.pdf](/Users/mac/Documents/GitHub/BARC/barc_stage1/outputs/figures/final_paper/lower_bound_vs_actual_final.pdf)
+- `figures/final_paper/qft_vs_other_real_traces_final.pdf` -> [qft_vs_other_real_traces_final.pdf](/Users/mac/Documents/GitHub/BARC/barc_stage1/outputs/figures/final_paper/qft_vs_other_real_traces_final.pdf)
+- `figures/final_paper/real_trace_scaling_final.pdf` -> [real_trace_scaling_final.pdf](/Users/mac/Documents/GitHub/BARC/barc_stage1/outputs/figures/final_paper/real_trace_scaling_final.pdf)
+- `figures/final_paper/qft_approximation_reduced_grid_final.pdf` -> [qft_approximation_reduced_grid_final.pdf](/Users/mac/Documents/GitHub/BARC/barc_stage1/outputs/figures/final_paper/qft_approximation_reduced_grid_final.pdf)
+- `figures/final_paper/lower_bound_gap_cases_final.pdf` -> [lower_bound_gap_cases_final.pdf](/Users/mac/Documents/GitHub/BARC/barc_stage1/outputs/figures/final_paper/lower_bound_gap_cases_final.pdf)
+
+## Manuscript Table Map
+
+These files are the primary quantitative sources for the current draft.
+
+- [family_summary.csv](/Users/mac/Documents/GitHub/BARC/barc_stage1/outputs/tables/family_summary.csv): family-level slowdown and `Delta_max` summaries
+- [inversion_summary.csv](/Users/mac/Documents/GitHub/BARC/barc_stage1/outputs/tables/inversion_summary.csv): T-depth inversion rates
+- [predictive_classification_summary.csv](/Users/mac/Documents/GitHub/BARC/barc_stage1/outputs/tables/predictive_classification_summary.csv): stall and inversion AUC summaries
+- [predictive_regression_summary.csv](/Users/mac/Documents/GitHub/BARC/barc_stage1/outputs/tables/predictive_regression_summary.csv): slowdown correlation summaries
+- [predictive_multivariate_regression.csv](/Users/mac/Documents/GitHub/BARC/barc_stage1/outputs/tables/predictive_multivariate_regression.csv): representative multivariate slowdown fits
+- [incremental_predictive_models.csv](/Users/mac/Documents/GitHub/BARC/barc_stage1/outputs/tables/incremental_predictive_models.csv): incremental gain values used in the predictor discussion
+- [bootstrap_slack_vs_tdepth.csv](/Users/mac/Documents/GitHub/BARC/barc_stage1/outputs/tables/bootstrap_slack_vs_tdepth.csv): paired bootstrap confidence intervals
+- [causal_chain_correlations.csv](/Users/mac/Documents/GitHub/BARC/barc_stage1/outputs/tables/causal_chain_correlations.csv): structure-to-system-to-execution correlation chain
+- [lower_bound_validation.csv](/Users/mac/Documents/GitHub/BARC/barc_stage1/outputs/tables/lower_bound_validation.csv): 4,904 finite instances used in lower-bound validation
+- [lower_bound_gap_cases.csv](/Users/mac/Documents/GitHub/BARC/barc_stage1/outputs/tables/lower_bound_gap_cases.csv): representative finite positive-gap cases
+- [qft_real_trace_summary.csv](/Users/mac/Documents/GitHub/BARC/barc_stage1/outputs/tables/qft_real_trace_summary.csv): exact-QFT real-trace summary values
+- [real_trace_scaling_summary.csv](/Users/mac/Documents/GitHub/BARC/barc_stage1/outputs/tables/real_trace_scaling_summary.csv): adder/multiplier scaling values
+- [qft_approximation_reduced_grid_summary.csv](/Users/mac/Documents/GitHub/BARC/barc_stage1/outputs/tables/qft_approximation_reduced_grid_summary.csv): exact vs approximate QFT reduced-grid comparison
+
 ## Main Results
 
 The primary figures for the paper are:
 
-- [slack_vs_slowdown.png](/Users/mac/Documents/GitHub/BARC/barc_stage1/outputs/figures/slack_vs_slowdown.png)
-- [delta_max_vs_slowdown.png](/Users/mac/Documents/GitHub/BARC/barc_stage1/outputs/figures/delta_max_vs_slowdown.png)
-- [slack_vs_stall.png](/Users/mac/Documents/GitHub/BARC/barc_stage1/outputs/figures/slack_vs_stall.png)
-- [structure_to_execution_chain.png](/Users/mac/Documents/GitHub/BARC/barc_stage1/outputs/figures/structure_to_execution_chain.png)
-- [lower_bound_vs_actual.png](/Users/mac/Documents/GitHub/BARC/barc_stage1/outputs/figures/lower_bound_vs_actual.png)
+- [slack_vs_slowdown.png](barc_stage1/outputs/figures/slack_vs_slowdown.png)
+- [delta_max_vs_slowdown.png](barc_stage1/outputs/figures/delta_max_vs_slowdown.png)
+- [slack_vs_stall.png](barc_stage1/outputs/figures/slack_vs_stall.png)
+- [structure_to_execution_chain.png](barc_stage1/outputs/figures/structure_to_execution_chain.png)
+- [lower_bound_vs_actual.png](barc_stage1/outputs/figures/lower_bound_vs_actual.png)
 
 The primary tables are:
 
-- [stage1_grid_scan.csv](/Users/mac/Documents/GitHub/BARC/barc_stage1/outputs/tables/stage1_grid_scan.csv)
-- [family_summary.csv](/Users/mac/Documents/GitHub/BARC/barc_stage1/outputs/tables/family_summary.csv)
-- [predictive_classification_summary.csv](/Users/mac/Documents/GitHub/BARC/barc_stage1/outputs/tables/predictive_classification_summary.csv)
-- [predictive_regression_summary.csv](/Users/mac/Documents/GitHub/BARC/barc_stage1/outputs/tables/predictive_regression_summary.csv)
-- [predictive_multivariate_regression.csv](/Users/mac/Documents/GitHub/BARC/barc_stage1/outputs/tables/predictive_multivariate_regression.csv)
-- [causal_chain_summary.csv](/Users/mac/Documents/GitHub/BARC/barc_stage1/outputs/tables/causal_chain_summary.csv)
-- [causal_chain_correlations.csv](/Users/mac/Documents/GitHub/BARC/barc_stage1/outputs/tables/causal_chain_correlations.csv)
-- [lower_bound_validation.csv](/Users/mac/Documents/GitHub/BARC/barc_stage1/outputs/tables/lower_bound_validation.csv)
-- [predictive_analysis_summary.txt](/Users/mac/Documents/GitHub/BARC/barc_stage1/outputs/tables/predictive_analysis_summary.txt)
-- [paper1_reframing_summary.txt](/Users/mac/Documents/GitHub/BARC/barc_stage1/outputs/tables/paper1_reframing_summary.txt)
+- [stage1_grid_scan.csv](barc_stage1/outputs/tables/stage1_grid_scan.csv)
+- [family_summary.csv](barc_stage1/outputs/tables/family_summary.csv)
+- [predictive_classification_summary.csv](barc_stage1/outputs/tables/predictive_classification_summary.csv)
+- [predictive_regression_summary.csv](barc_stage1/outputs/tables/predictive_regression_summary.csv)
+- [predictive_multivariate_regression.csv](barc_stage1/outputs/tables/predictive_multivariate_regression.csv)
+- [causal_chain_summary.csv](barc_stage1/outputs/tables/causal_chain_summary.csv)
+- [causal_chain_correlations.csv](barc_stage1/outputs/tables/causal_chain_correlations.csv)
+- [lower_bound_validation.csv](barc_stage1/outputs/tables/lower_bound_validation.csv)
+- [predictive_analysis_summary.txt](barc_stage1/outputs/tables/predictive_analysis_summary.txt)
+- [paper1_reframing_summary.txt](barc_stage1/outputs/tables/paper1_reframing_summary.txt)
 
 The real-trace grounding remains available under `src/real_trace/` and `outputs/real_trace/`. In the paper narrative, these traces serve as grounding examples rather than as the main source of method comparison.
 
@@ -103,14 +161,14 @@ The lower bound is a fixed-schedule result. It does not characterize optimal sch
 
 The source tree keeps the paper pipeline compact:
 
-- `src/dag.py`, `src/trace.py`: model layer
-- `src/schedule.py`: scheduling layer
-- `src/simulator.py`: simulation layer
-- `src/metrics.py`, `src/predictive_analysis.py`: analysis layer
-- `src/plots.py`: figure generation
-- `src/real_trace/`: real-trace grounding utilities
-- `scripts/run_qce_paper.py`: single entry point
-- `tests/`: slack validation tests
+- `barc_stage1/src/dag.py`, `barc_stage1/src/trace.py`: model layer
+- `barc_stage1/src/schedule.py`: scheduling layer
+- `barc_stage1/src/simulator.py`: simulation layer
+- `barc_stage1/src/metrics.py`, `barc_stage1/src/predictive_analysis.py`: analysis layer
+- `barc_stage1/src/plots.py`: figure generation
+- `barc_stage1/src/real_trace/`: real-trace grounding utilities
+- `barc_stage1/scripts/run_qce_paper.py`: single entry point
+- `barc_stage1/tests/`: slack validation tests
 
 ## Appendix Outputs
 

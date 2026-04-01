@@ -43,7 +43,7 @@ def compute_lower_bound(T_static: float, delta_max: float, B: float, C: float) -
     """Return the fixed-schedule execution lower bound induced by bounded delivery."""
     if C <= 0:
         raise ValueError("C must be positive")
-    return float(T_static + max(0.0, delta_max - B) / C)
+    return float(T_static + math.ceil(max(0.0, delta_max - B) / C))
 
 
 def build_predictive_dataset(grid_df: pd.DataFrame, grid_pair_df: pd.DataFrame) -> pd.DataFrame:

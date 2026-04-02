@@ -25,6 +25,10 @@ FIGURE_FILES = [
         "figures/final_paper/qft_approximation_reduced_grid_final.pdf",
         OUTPUT_ROOT / "figures" / "final_paper" / "qft_approximation_reduced_grid_final.pdf",
     ),
+    (
+        "figures/final_paper/robustness_stochastic_routing_summary_final.pdf",
+        OUTPUT_ROOT / "figures" / "final_paper" / "robustness_stochastic_routing_summary_final.pdf",
+    ),
     ("figures/final_paper/lower_bound_gap_cases_final.pdf", OUTPUT_ROOT / "figures" / "final_paper" / "lower_bound_gap_cases_final.pdf"),
 ]
 
@@ -42,6 +46,8 @@ TABLE_FILES = [
     ("tables/qft_real_trace_summary.csv", OUTPUT_ROOT / "tables" / "qft_real_trace_summary.csv"),
     ("tables/real_trace_scaling_summary.csv", OUTPUT_ROOT / "tables" / "real_trace_scaling_summary.csv"),
     ("tables/qft_approximation_reduced_grid_summary.csv", OUTPUT_ROOT / "tables" / "qft_approximation_reduced_grid_summary.csv"),
+    ("tables/stochastic_supply_ranking_summary.csv", OUTPUT_ROOT / "tables" / "stochastic_supply_ranking_summary.csv"),
+    ("tables/routing_proxy_ranking_summary.csv", OUTPUT_ROOT / "tables" / "routing_proxy_ranking_summary.csv"),
     ("tables/predictive_analysis_summary.txt", OUTPUT_ROOT / "tables" / "predictive_analysis_summary.txt"),
 ]
 

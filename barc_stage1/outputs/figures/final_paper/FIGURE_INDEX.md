@@ -16,6 +16,7 @@ This index maps the manuscript-facing LaTeX figure paths to the generated artifa
 
 ## Appendix Figures
 
+- `figures/final_paper/robustness_stochastic_routing_summary_final.pdf`
 - `figures/final_paper/lower_bound_gap_cases_final.pdf`
 
 ## Notes

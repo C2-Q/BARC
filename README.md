@@ -62,6 +62,15 @@ Prepare a clean manuscript bundle containing the final PDF figures and key table
 python barc_stage1/scripts/prepare_submission_bundle.py
 ```
 
+Optional appendix robustness assets can be regenerated with:
+
+```bash
+cd barc_stage1
+python scripts/run_stochastic_supply_sensitivity.py
+python scripts/run_routing_proxy_sensitivity.py
+python scripts/build_appendix_robustness_figure.py
+```
+
 The main pipeline generates:
 
 - paper-facing tables in `outputs/tables/`
@@ -94,6 +103,7 @@ These are the figure PDFs directly referenced by the current paper draft.
 - `figures/final_paper/qft_vs_other_real_traces_final.pdf` -> [qft_vs_other_real_traces_final.pdf](/Users/mac/Documents/GitHub/BARC/barc_stage1/outputs/figures/final_paper/qft_vs_other_real_traces_final.pdf)
 - `figures/final_paper/real_trace_scaling_final.pdf` -> [real_trace_scaling_final.pdf](/Users/mac/Documents/GitHub/BARC/barc_stage1/outputs/figures/final_paper/real_trace_scaling_final.pdf)
 - `figures/final_paper/qft_approximation_reduced_grid_final.pdf` -> [qft_approximation_reduced_grid_final.pdf](/Users/mac/Documents/GitHub/BARC/barc_stage1/outputs/figures/final_paper/qft_approximation_reduced_grid_final.pdf)
+- `figures/final_paper/robustness_stochastic_routing_summary_final.pdf` -> [robustness_stochastic_routing_summary_final.pdf](/Users/mac/Documents/GitHub/BARC/barc_stage1/outputs/figures/final_paper/robustness_stochastic_routing_summary_final.pdf)
 - `figures/final_paper/lower_bound_gap_cases_final.pdf` -> [lower_bound_gap_cases_final.pdf](/Users/mac/Documents/GitHub/BARC/barc_stage1/outputs/figures/final_paper/lower_bound_gap_cases_final.pdf)
 
 ## Manuscript Table Map
@@ -113,6 +123,8 @@ These files are the primary quantitative sources for the current draft.
 - [qft_real_trace_summary.csv](/Users/mac/Documents/GitHub/BARC/barc_stage1/outputs/tables/qft_real_trace_summary.csv): exact-QFT real-trace summary values
 - [real_trace_scaling_summary.csv](/Users/mac/Documents/GitHub/BARC/barc_stage1/outputs/tables/real_trace_scaling_summary.csv): adder/multiplier scaling values
 - [qft_approximation_reduced_grid_summary.csv](/Users/mac/Documents/GitHub/BARC/barc_stage1/outputs/tables/qft_approximation_reduced_grid_summary.csv): exact vs approximate QFT reduced-grid comparison
+- [stochastic_supply_ranking_summary.csv](/Users/mac/Documents/GitHub/BARC/barc_stage1/outputs/tables/stochastic_supply_ranking_summary.csv): appendix-level stochastic supply sensitivity summary
+- [routing_proxy_ranking_summary.csv](/Users/mac/Documents/GitHub/BARC/barc_stage1/outputs/tables/routing_proxy_ranking_summary.csv): appendix-level routing proxy sensitivity summary
 
 ## Main Results
 
@@ -148,14 +160,14 @@ The artifact uses:
 - dependency-aware synthetic DAG families
 - fixed schedule policies
 
-The artifact does not include:
+The main deterministic paper pipeline does not include:
 
 - routing or layout effects
 - stochastic delivery
 - noise, decoding, or full physical simulation
 - optimal scheduling over all valid schedules
 
-The lower bound is a fixed-schedule result. It does not characterize optimal scheduling across all valid schedules and it does not minimize `delta_max` over the full schedule space.
+Separate appendix robustness scripts provide first-order sensitivity checks for stochastic supply and route-induced effective-capacity proxies. The lower bound remains a fixed-schedule deterministic result. It does not characterize optimal scheduling across all valid schedules and it does not minimize `delta_max` over the full schedule space.
 
 ## Repository Layout
 
@@ -166,8 +178,13 @@ The source tree keeps the paper pipeline compact:
 - `barc_stage1/src/simulator.py`: simulation layer
 - `barc_stage1/src/metrics.py`, `barc_stage1/src/predictive_analysis.py`: analysis layer
 - `barc_stage1/src/plots.py`: figure generation
+- `barc_stage1/src/stochastic_supply.py`: stochastic supply sensitivity utilities
+- `barc_stage1/src/robustness_workloads.py`: representative workload selection for appendix robustness studies
 - `barc_stage1/src/real_trace/`: real-trace grounding utilities
 - `barc_stage1/scripts/run_qce_paper.py`: single entry point
+- `barc_stage1/scripts/run_stochastic_supply_sensitivity.py`: stochastic supply robustness study
+- `barc_stage1/scripts/run_routing_proxy_sensitivity.py`: route-induced effective-capacity proxy study
+- `barc_stage1/scripts/build_appendix_robustness_figure.py`: combine robustness summaries into a manuscript-facing PDF figure
 - `barc_stage1/tests/`: slack validation tests
 
 ## Appendix Outputs

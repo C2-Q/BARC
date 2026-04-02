@@ -14,6 +14,7 @@ The paper draft uses `\includegraphics{figures/...}` paths, while the artifact g
 
 - `figures/delta_max_illustration.pdf` comes from `barc_stage1/outputs/figures/delta_max_illustration.pdf`
 - `figures/final_paper/*.pdf` comes from `barc_stage1/outputs/figures/final_paper/*.pdf`
+- Appendix robustness figures can be regenerated from the summary CSVs with `python barc_stage1/scripts/build_appendix_robustness_figure.py`
 
 ## Scope
 

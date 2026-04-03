@@ -48,6 +48,10 @@ TABLE_FILES = [
     ("tables/qft_approximation_reduced_grid_summary.csv", OUTPUT_ROOT / "tables" / "qft_approximation_reduced_grid_summary.csv"),
     ("tables/stochastic_supply_ranking_summary.csv", OUTPUT_ROOT / "tables" / "stochastic_supply_ranking_summary.csv"),
     ("tables/routing_proxy_ranking_summary.csv", OUTPUT_ROOT / "tables" / "routing_proxy_ranking_summary.csv"),
+    (
+        "tables/delivery_aware_pass_probe_round2_summary.csv",
+        OUTPUT_ROOT / "tables" / "delivery_aware_pass_probe_round2_summary.csv",
+    ),
     ("tables/predictive_analysis_summary.txt", OUTPUT_ROOT / "tables" / "predictive_analysis_summary.txt"),
 ]
 

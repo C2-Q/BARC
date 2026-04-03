@@ -82,7 +82,7 @@ The main pipeline generates:
 The manuscript-facing files are split into two groups:
 
 - final PDF figures for LaTeX: `barc_stage1/outputs/figures/` and `barc_stage1/outputs/figures/final_paper/`
-- quantitative tables behind the reported claims: `barc_stage1/outputs/tables/`
+- quantitative tables behind the reported claims, including appendix support tables: `barc_stage1/outputs/tables/`
 
 Running `python barc_stage1/scripts/prepare_submission_bundle.py` creates `submission_bundle/` at the repository root with:
 
@@ -125,6 +125,7 @@ These files are the primary quantitative sources for the current draft.
 - [qft_approximation_reduced_grid_summary.csv](/Users/mac/Documents/GitHub/BARC/barc_stage1/outputs/tables/qft_approximation_reduced_grid_summary.csv): exact vs approximate QFT reduced-grid comparison
 - [stochastic_supply_ranking_summary.csv](/Users/mac/Documents/GitHub/BARC/barc_stage1/outputs/tables/stochastic_supply_ranking_summary.csv): appendix-level stochastic supply sensitivity summary
 - [routing_proxy_ranking_summary.csv](/Users/mac/Documents/GitHub/BARC/barc_stage1/outputs/tables/routing_proxy_ranking_summary.csv): appendix-level routing proxy sensitivity summary
+- [delivery_aware_pass_probe_round2_summary.csv](/Users/mac/Documents/GitHub/BARC/barc_stage1/outputs/tables/delivery_aware_pass_probe_round2_summary.csv): appendix-level preliminary compiler-probe summary
 
 ## Main Results
 
@@ -169,6 +170,8 @@ The main deterministic paper pipeline does not include:
 
 Separate appendix robustness scripts provide first-order sensitivity checks for stochastic supply and route-induced effective-capacity proxies. The lower bound remains a fixed-schedule deterministic result. It does not characterize optimal scheduling across all valid schedules and it does not minimize `delta_max` over the full schedule space.
 
+The repository also contains a preliminary quota-respecting scheduling probe. This probe is included only as appendix support for the current manuscript and should not be interpreted as a full compiler evaluation.
+
 ## Repository Layout
 
 The source tree keeps the paper pipeline compact:
@@ -181,10 +184,12 @@ The source tree keeps the paper pipeline compact:
 - `barc_stage1/src/stochastic_supply.py`: stochastic supply sensitivity utilities
 - `barc_stage1/src/robustness_workloads.py`: representative workload selection for appendix robustness studies
 - `barc_stage1/src/real_trace/`: real-trace grounding utilities
+- `barc_stage1/src/real_trace/circuit_to_dag.py`: convert real Qiskit circuits into the internal DAG representation used by scheduling probes
 - `barc_stage1/scripts/run_qce_paper.py`: single entry point
 - `barc_stage1/scripts/run_stochastic_supply_sensitivity.py`: stochastic supply robustness study
 - `barc_stage1/scripts/run_routing_proxy_sensitivity.py`: route-induced effective-capacity proxy study
 - `barc_stage1/scripts/build_appendix_robustness_figure.py`: combine robustness summaries into a manuscript-facing PDF figure
+- `barc_stage1/scripts/run_delivery_aware_pass_probe_round2.py`: appendix-level preliminary compiler-probe summary generation
 - `barc_stage1/tests/`: slack validation tests
 
 ## Appendix Outputs

@@ -1,0 +1,5 @@
+Minimal delivery-aware pass probe
+
+high_compressibility: mean static-depth improvement=0.111, max static-depth improvement=1, mean executed-depth improvement=0.111, positive-rate=0.111, mean Delta_max reduction=0.000
+low_compressibility: mean static-depth improvement=0.000, max static-depth improvement=0, mean executed-depth improvement=0.000, positive-rate=0.000, mean Delta_max reduction=0.000
+medium_compressibility: mean static-depth improvement=1.000, max static-depth improvement=3, mean executed-depth improvement=1.000, positive-rate=0.444, mean Delta_max reduction=0.000

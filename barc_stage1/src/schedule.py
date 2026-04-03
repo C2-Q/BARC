@@ -17,8 +17,10 @@ class Schedule:
 
 
 def build_schedule(dag: DAG, policy: str, capacity_limit: int | None = None) -> Schedule:
-    if policy not in {"static_min", "capacity_aware_static", "smoothed"}:
-        raise ValueError("policy must be 'static_min', 'capacity_aware_static', or 'smoothed'")
+    if policy not in {"static_min", "capacity_aware_static", "smoothed", "delivery_aware_slack"}:
+        raise ValueError(
+            "policy must be 'static_min', 'capacity_aware_static', 'smoothed', or 'delivery_aware_slack'"
+        )
 
     if policy == "static_min":
         cycles = _build_static_min_cycles(dag)
@@ -27,8 +29,13 @@ def build_schedule(dag: DAG, policy: str, capacity_limit: int | None = None) -> 
         if effective_limit < 1:
             raise ValueError("capacity_limit must be at least 1 for capacity_aware_static")
         cycles = _build_capacity_aware_static_cycles(dag, capacity_limit=effective_limit)
-    else:
+    elif policy == "smoothed":
         cycles = _build_smoothed_cycles(dag)
+    else:
+        effective_limit = 1 if capacity_limit is None else capacity_limit
+        if effective_limit < 1:
+            raise ValueError("capacity_limit must be at least 1 for delivery_aware_slack")
+        cycles = _build_delivery_aware_slack_cycles(dag, capacity_limit=effective_limit)
 
     node_to_cycle: dict[int, int] = {}
     t_demand_per_cycle: list[int] = []
@@ -179,6 +186,41 @@ def _build_smoothed_cycles(dag: DAG) -> list[list[int]]:
     return cycles
 
 
+def _build_delivery_aware_slack_cycles(dag: DAG, capacity_limit: int) -> list[list[int]]:
+    asap, alap, _ = compute_node_slack(dag)
+    slack = {node_id: alap[node_id] - asap[node_id] for node_id in dag.nodes}
+    downstream_t_counts = _compute_downstream_t_counts(dag)
+
+    unscheduled_preds = {node_id: len(node.predecessors) for node_id, node in dag.nodes.items()}
+    ready = [node_id for node_id, degree in unscheduled_preds.items() if degree == 0]
+    cycles: list[list[int]] = []
+
+    while ready:
+        ordered_ready = sorted(ready, key=lambda node_id: (dag.nodes[node_id].layer, node_id))
+        ready_clifford = [node_id for node_id in ordered_ready if dag.nodes[node_id].op_type == "C"]
+        ready_t = [node_id for node_id in ordered_ready if dag.nodes[node_id].op_type == "T"]
+        chosen_t = sorted(
+            ready_t,
+            key=lambda node_id: (
+                slack[node_id],
+                -downstream_t_counts[node_id],
+                dag.nodes[node_id].layer,
+                node_id,
+            ),
+        )[:capacity_limit]
+        cycle_nodes = sorted(ready_clifford + chosen_t, key=lambda node_id: (dag.nodes[node_id].layer, node_id))
+        cycles.append(cycle_nodes)
+
+        selected = set(cycle_nodes)
+        ready = [node_id for node_id in ordered_ready if node_id not in selected]
+        for node_id in cycle_nodes:
+            for successor in dag.nodes[node_id].successors:
+                unscheduled_preds[successor] -= 1
+                if unscheduled_preds[successor] == 0:
+                    ready.append(successor)
+    return cycles
+
+
 def _push_ready_node(
     dag: DAG,
     node_id: int,
@@ -190,6 +232,14 @@ def _push_ready_node(
         heappush(ready_t, (latest_start[node_id], dag.nodes[node_id].layer, node_id))
     else:
         ready_c.append(node_id)
+
+
+def _compute_downstream_t_counts(dag: DAG) -> dict[int, int]:
+    downstream_t: dict[int, int] = {}
+    for node_id in reversed(dag.topological_order()):
+        successor_scores = [downstream_t[succ] for succ in dag.nodes[node_id].successors]
+        downstream_t[node_id] = (1 if dag.nodes[node_id].op_type == "T" else 0) + (max(successor_scores) if successor_scores else 0)
+    return downstream_t
 
 
 def _validate_schedule(dag: DAG, node_to_cycle: dict[int, int]) -> None:

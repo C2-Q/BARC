@@ -1,0 +1,6 @@
+Delivery-aware pass round-2 probe
+
+adder_n4: mean static-depth improvement=0.000, max static-depth improvement=0, mean executed-depth improvement=0.000, positive-rate=0.000, mean Delta_max reduction=0.000, build-seconds=0.04, pass-eval-seconds=0.00
+multiplier_n4: mean static-depth improvement=34.000, max static-depth improvement=67, mean executed-depth improvement=34.000, positive-rate=1.000, mean Delta_max reduction=0.000, build-seconds=0.26, pass-eval-seconds=0.31
+multiplier_n5: mean static-depth improvement=55.000, max static-depth improvement=108, mean executed-depth improvement=55.000, positive-rate=1.000, mean Delta_max reduction=0.000, build-seconds=0.41, pass-eval-seconds=0.77
+multiplier_n6: mean static-depth improvement=77.500, max static-depth improvement=152, mean executed-depth improvement=77.500, positive-rate=1.000, mean Delta_max reduction=0.000, build-seconds=0.58, pass-eval-seconds=1.61

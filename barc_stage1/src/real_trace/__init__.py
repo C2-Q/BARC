@@ -34,6 +34,7 @@ from src.real_trace.analysis import (
     summarize_real_trace,
 )
 from src.real_trace.circuit_slack import CircuitSlackMetrics, compute_circuit_slack_metrics
+from src.real_trace.circuit_to_dag import quantum_circuit_to_internal_dag
 from src.real_trace.stats_utils import build_real_trace_note
 
 __all__ = [
@@ -67,4 +68,5 @@ __all__ = [
     "build_real_trace_note",
     "CircuitSlackMetrics",
     "compute_circuit_slack_metrics",
+    "quantum_circuit_to_internal_dag",
 ]

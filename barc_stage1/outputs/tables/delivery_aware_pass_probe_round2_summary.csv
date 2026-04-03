@@ -1,0 +1,5 @@
+workload,instances,feasible_pairs,mean_static_depth_improvement,max_static_depth_improvement,mean_exe_improvement,positive_exe_improvement_rate,mean_delta_max_reduction,mean_build_seconds,mean_eval_seconds
+adder_n4,6,6,0.0,0,0.0,0.0,0.0,0.04242900013923645,0.0018685136456042528
+multiplier_n4,6,6,34.0,67,34.0,1.0,0.0,0.2648072501178831,0.3135426874893407
+multiplier_n5,6,6,55.0,108,55.0,1.0,0.0,0.4089612909592688,0.7684787292188654
+multiplier_n6,6,6,77.5,152,77.5,1.0,0.0,0.5846975001040846,1.6132882083766162

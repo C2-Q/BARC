@@ -1,0 +1,4 @@
+family,instances,feasible_pairs,mean_static_depth_improvement,max_static_depth_improvement,mean_exe_improvement,positive_exe_improvement_rate,mean_delta_max_reduction
+high_compressibility,27,27,0.1111111111111111,1,0.1111111111111111,0.1111111111111111,0.0
+low_compressibility,27,27,0.0,0,0.0,0.0,0.0
+medium_compressibility,27,27,1.0,3,1.0,0.4444444444444444,0.0

@@ -280,12 +280,16 @@ def plot_qft_reduced_grid_summary(summary_df: pd.DataFrame) -> Path:
     per_c = summary_df[summary_df.get("C").notna()].copy() if "C" in summary_df.columns else pd.DataFrame()
 
     figure, axes = plt.subplots(1, 3, figsize=(10.6, 3.4))
-    variants = overall["variant"].tolist()
+    variant_label_map = {
+        "approx_deg_4": "Degree-4 approx.",
+        "exact": "Exact",
+    }
+    variants = [variant_label_map.get(variant, str(variant)) for variant in overall["variant"].tolist()]
     colors = ["#4c78a8", "#f58518"]
 
     metric_specs = [
         ("mean_delta_max", r"Mean $\Delta_{\max}$"),
-        ("frac_with_slowdown", "Fraction with slowdown"),
+        ("frac_with_slowdown", "Fraction with >5% slowdown"),
         ("frac_with_stall", "Fraction with stall"),
     ]
     for axis, (column, ylabel) in zip(axes, metric_specs, strict=True):

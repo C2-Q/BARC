@@ -490,7 +490,6 @@ def plot_structure_to_execution_chain_empirical(causal_chain_df: pd.DataFrame) -
     delta_column = "delta_max" if "delta_max" in causal_chain_df.columns else "Delta_max"
     subset = causal_chain_df[
         (causal_chain_df["policy"] == "static_min")
-        & (causal_chain_df["C"] == COMPRESSIBILITY_SCAN_C)
         & (causal_chain_df["B"] == COMPRESSIBILITY_SCAN_B)
         & np.isfinite(causal_chain_df["slowdown_ratio"])
     ].copy()
@@ -653,6 +652,7 @@ def plot_incremental_predictive_gain_final(incremental_df: pd.DataFrame) -> Path
         r"$R^2$",
         "",
         paper_style=True,
+        label_decimals=4,
     )
     _plot_incremental_panel(
         axes[1],
@@ -678,7 +678,6 @@ def plot_structure_to_execution_chain_empirical_final(causal_chain_df: pd.DataFr
     delta_column = "delta_max" if "delta_max" in causal_chain_df.columns else "Delta_max"
     subset = causal_chain_df[
         (causal_chain_df["policy"] == "static_min")
-        & (causal_chain_df["C"] == COMPRESSIBILITY_SCAN_C)
         & (causal_chain_df["B"] == COMPRESSIBILITY_SCAN_B)
         & np.isfinite(causal_chain_df["slowdown_ratio"])
     ].copy()
@@ -1193,6 +1192,7 @@ def _plot_incremental_panel(
     ylabel: str,
     title: str,
     paper_style: bool = False,
+    label_decimals: int = 3,
 ) -> None:
     model_order = ["T_depth_only", "T_depth_plus_slack", "T_depth_slack_delta"]
     label_map = {
@@ -1211,7 +1211,7 @@ def _plot_incremental_panel(
         axis.text(
             bar.get_x() + bar.get_width() / 2,
             value + max(0.01, 0.02 * max(values, default=1.0)),
-            f"{value:.3f}",
+            f"{value:.{label_decimals}f}",
             ha="center",
             va="bottom",
             fontsize=7.2 if paper_style else 8.2,

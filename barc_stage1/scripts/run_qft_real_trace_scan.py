@@ -275,7 +275,7 @@ def plot_qft_vs_other_real_traces(qft_summary_df: pd.DataFrame, scaling_summary_
         axes[1].text(index, label_y, f"{value:.1f}", ha="center", va="bottom", fontsize=9)
     axes[1].set_yscale("symlog", linthresh=1.0)
     axes[1].set_ylim(0.0, max(max(delta_values, default=1.0) * 2.1, 10.0))
-    axes[1].set_ylabel(r"Mean $\Delta_{\max}$")
+    axes[1].set_ylabel(r"Mean $\Delta_{\max}$ (symlog)")
     axes[1].set_title("Delivery pressure")
     axes[1].tick_params(axis="x", rotation=15)
     axes[1].grid(axis="y", alpha=0.18)

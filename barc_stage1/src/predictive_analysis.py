@@ -476,19 +476,43 @@ def build_predictive_analysis_summary(
     stall_auc = classification_df[classification_df["task"] == "stall"].set_index("metric")["mean_roc_auc"].to_dict()
     inversion_auc = classification_df[classification_df["task"] == "inversion"].set_index("metric")["mean_roc_auc"].to_dict()
     regression_map = regression_df.set_index("metric")["mean_abs_spearman"].to_dict()
+    delta_metric = "delta_max" if "delta_max" in regression_map else "Delta_max"
     representative = predictive_df[
-        (predictive_df["C"] == COMPRESSIBILITY_SCAN_C)
-        & (predictive_df["B"] == COMPRESSIBILITY_SCAN_B)
+        (predictive_df["B"] == COMPRESSIBILITY_SCAN_B)
         & np.isfinite(predictive_df["slowdown_ratio"])
     ].copy()
-    low_slack = representative[representative["slack_ratio"] <= representative["slack_ratio"].median()]
-    high_slack = representative[representative["slack_ratio"] > representative["slack_ratio"].median()]
-    low_gain = float(low_slack["shaping_gain"].mean()) if not low_slack.empty else 0.0
-    high_gain = float(high_slack["shaping_gain"].mean()) if not high_slack.empty else 0.0
     leading_feature = multivariate_df.iloc[multivariate_df["standardized_coefficient"].abs().argmax()]["feature"] if not multivariate_df.empty else "none"
     chain_all = causal_corr_df[causal_corr_df["policy"] == "ALL"].set_index(["left_metric", "right_metric"])
-    slack_delta_corr = float(chain_all.loc[("slack_ratio", "Delta_max"), "spearman"]) if ("slack_ratio", "Delta_max") in chain_all.index else 0.0
-    delta_stall_corr = float(chain_all.loc[("Delta_max", "stall_observed"), "spearman"]) if ("Delta_max", "stall_observed") in chain_all.index else 0.0
+    slack_delta_corr = (
+        float(chain_all.loc[("slack_ratio", "Delta_max"), "spearman"])
+        if ("slack_ratio", "Delta_max") in chain_all.index
+        else float(chain_all.loc[("slack_ratio", "delta_max"), "spearman"])
+        if ("slack_ratio", "delta_max") in chain_all.index
+        else 0.0
+    )
+    delta_stall_corr = (
+        float(chain_all.loc[("Delta_max", "stall_observed"), "spearman"])
+        if ("Delta_max", "stall_observed") in chain_all.index
+        else float(chain_all.loc[("delta_max", "stall_observed"), "spearman"])
+        if ("delta_max", "stall_observed") in chain_all.index
+        else 0.0
+    )
+    representative_slack_delta = (
+        _spearman(
+            representative["slack_ratio"].astype(float).to_numpy(),
+            representative["delta_max"].astype(float).to_numpy(),
+        )
+        if len(representative) >= 2
+        else 0.0
+    )
+    representative_delta_slowdown = (
+        _spearman(
+            representative["delta_max"].astype(float).to_numpy(),
+            representative["slowdown_ratio"].astype(float).to_numpy(),
+        )
+        if len(representative) >= 2
+        else 0.0
+    )
     finite_lower_bound = lower_bound_df[np.isfinite(lower_bound_df["T_exe"])].copy()
     lower_bound_corr = (
         _pearson(
@@ -519,11 +543,11 @@ def build_predictive_analysis_summary(
 
     lines = [
         f"1. Structural predictors: slack_ratio outperforms T_depth for slowdown ({regression_map.get('slack_ratio', 0.0):.3f} vs {regression_map.get('T_depth', 0.0):.3f} mean |Spearman|) and for stall ({stall_auc.get('slack_ratio', 0.5):.3f} vs {stall_auc.get('T_depth', 0.5):.3f} mean ROC-AUC).",
-        f"2. Immediate system predictors: Delta_max has the highest observed association with slowdown ({regression_map.get('Delta_max', 0.0):.3f} mean |Spearman|) and stall ({stall_auc.get('Delta_max', 0.5):.3f} mean ROC-AUC).",
-        f"3. For inversion prediction, slack_ratio={inversion_auc.get('slack_ratio', 0.5):.3f}, T_depth={inversion_auc.get('T_depth', 0.5):.3f}, Delta_max={inversion_auc.get('Delta_max', 0.5):.3f} mean ROC-AUC.",
+        f"2. Immediate system predictors: Delta_max has the highest observed association with slowdown ({regression_map.get(delta_metric, 0.0):.3f} mean |Spearman|) and stall ({stall_auc.get(delta_metric, 0.5):.3f} mean ROC-AUC).",
+        f"3. For inversion prediction, slack_ratio={inversion_auc.get('slack_ratio', 0.5):.3f}, T_depth={inversion_auc.get('T_depth', 0.5):.3f}, Delta_max={inversion_auc.get(delta_metric, 0.5):.3f} mean ROC-AUC.",
         f"4. Incremental model fits remain consistent with a layered interpretation: adding slack_ratio to T_depth changes slowdown R^2 by {slowdown_increment:.3f} and stall AUC by {stall_increment:.3f}; adding Delta_max changes slowdown R^2 by {slowdown_delta_increment:.3f} and stall AUC by {stall_delta_increment:.3f}.",
         f"5. The causal chain is consistent with the data: Spearman(slack_ratio, Delta_max)={slack_delta_corr:.3f}, Spearman(Delta_max, stall)={delta_stall_corr:.3f}.",
-        f"6. In the representative bounded-delivery slice (C={COMPRESSIBILITY_SCAN_C}, B={COMPRESSIBILITY_SCAN_B}), lower-slack workloads have mean shaping gain={low_gain:.3f}, higher-slack workloads have mean shaping gain={high_gain:.3f}; the largest standardized regression coefficient is associated with {leading_feature}.",
+        f"6. In the representative fixed-buffer regime (B={COMPRESSIBILITY_SCAN_B}), Spearman(slack_ratio, Delta_max)={representative_slack_delta:.3f} and Spearman(Delta_max, slowdown)={representative_delta_slowdown:.3f}; the largest standardized regression coefficient is associated with {leading_feature}.",
         f"7. The fixed-schedule lower bound tracks executed makespan closely: Pearson(predicted lower bound, T_exe)={lower_bound_corr:.3f}, mean slack above the bound={mean_bound_gap:.3f} cycles.",
     ]
     return "\n".join(lines) + "\n"

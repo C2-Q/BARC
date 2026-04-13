@@ -30,7 +30,7 @@ The repository is organized around four layers:
 
 For a fixed valid schedule with static depth `T_static`, delivery capacity `C`, buffer `B`, and prefix deficit `delta_max`, the artifact evaluates the lower bound
 
-`T_static + max(0, delta_max - B) / C`
+`T_static + ceil(max(0, delta_max - B) / C)`
 
 against the simulated executed makespan `T_exe`.
 

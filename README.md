@@ -4,7 +4,7 @@
 
 This repository accompanies the QCE submission:
 
-`When Depth Misleads: Predictive Modeling of Quantum Execution Stalls under Bounded Magic-State Delivery`
+`When T-Depth Misleads: Predicting Fault-Tolerant Quantum Execution Slowdown under Magic-State Delivery Constraints`
 
 The artifact studies how circuit dependency structure interacts with a fixed delivery rate `C` and a fixed buffer capacity `B`, and packages the paper-facing figures and tables used by the manuscript.
 

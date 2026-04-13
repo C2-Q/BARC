@@ -21,12 +21,23 @@ from src.experiments import _build_family_dag
 from src.schedule import build_schedule
 from src.simulator import simulate_trace
 from src.trace import schedule_to_trace_bundle
-from src.utils import FIGURE_DIR, TABLE_DIR, ensure_output_dirs
+from src.utils import FIGURE_DIR, FINAL_PAPER_DIR, TABLE_DIR, ensure_output_dirs
 
 
 BOOTSTRAP_ITERATIONS = 10_000
 BOOTSTRAP_SEED = 42
 FAMILY_ORDER = ["ALL", "high_compressibility", "medium_compressibility", "low_compressibility"]
+FAMILY_DISPLAY = {
+    "high_compressibility": "High compressibility",
+    "medium_compressibility": "Medium compressibility",
+    "low_compressibility": "Low compressibility",
+}
+POLICY_DISPLAY = {
+    "static_min": "Static-min",
+    "capacity_aware_static": "Capacity-aware",
+    "smoothed": "Smoothed",
+    "delivery_aware_slack": "Delivery-aware slack",
+}
 
 
 @dataclass(frozen=True)
@@ -285,7 +296,8 @@ def run_lower_bound_gap_forensics(lower_bound_df: pd.DataFrame, grid_df: pd.Data
         )
         _plot_gap_case_row(axes[index - 1], reconstruction, case_id)
         interpretation_lines.append(
-            f"{case_id}: {row.family}, seed={int(row.seed)}, policy={row.policy}, C={int(row.C)}, B={int(row.B)}, "
+            f"{case_id}: {_display_family(row.family)}, seed={int(row.seed)}, "
+            f"policy={_display_policy(row.policy)}, C={int(row.C)}, B={int(row.B)}, "
             f"gap={float(row.gap):.2f}. The cumulative demand exceeds the supply envelope near logical cycle "
             f"{reconstruction['peak_index']}, and the backlog remains active for {reconstruction['persistence_length']} logical cycles."
         )
@@ -294,6 +306,10 @@ def run_lower_bound_gap_forensics(lower_bound_df: pd.DataFrame, grid_df: pd.Data
     figure_path = FIGURE_DIR / "lower_bound_gap_cases.png"
     figure.savefig(figure_path, dpi=300)
     figure.savefig(figure_path.with_suffix(".pdf"))
+    final_png_path = FINAL_PAPER_DIR / "lower_bound_gap_cases_final.png"
+    final_pdf_path = FINAL_PAPER_DIR / "lower_bound_gap_cases_final.pdf"
+    figure.savefig(final_png_path, dpi=300)
+    figure.savefig(final_pdf_path)
     plt.close(figure)
 
     interpretation = (
@@ -416,7 +432,7 @@ def _plot_gap_case_row(axes_row: np.ndarray, reconstruction: dict[str, object], 
     left_axis.plot(x_values, supply_envelope, color="#444444", linewidth=1.2, linestyle="--", label="Supply envelope")
     left_axis.fill_between(x_values, supply_envelope, cumulative_demand, where=backlog > 0, color="#e45756", alpha=0.18)
     left_axis.axvline(peak_index, color="#777777", linewidth=0.9, linestyle=":")
-    left_axis.set_ylabel(f"{case_id}\nCumulative T")
+    left_axis.set_ylabel(f"{_display_case_id(case_id)}\nCumulative T")
     left_axis.grid(alpha=0.18)
     left_axis.legend(frameon=False, fontsize=8, loc="upper left")
 
@@ -429,13 +445,25 @@ def _plot_gap_case_row(axes_row: np.ndarray, reconstruction: dict[str, object], 
     right_axis.set_ylabel("Demand")
     right_axis.grid(alpha=0.18)
     right_axis.set_title(
-        f"{row.family}, {row.policy}, gap={float(row.gap):.1f}, "
+        f"{_display_family(row.family)}, {_display_policy(row.policy)}, gap={float(row.gap):.1f}, "
         f"Δ={int(row.delta_max)}",
         fontsize=9,
     )
     if case_id == "case_4":
         left_axis.set_xlabel("Logical cycle")
         right_axis.set_xlabel("Logical cycle")
+
+
+def _display_family(name: str) -> str:
+    return FAMILY_DISPLAY.get(str(name), str(name).replace("_", " "))
+
+
+def _display_policy(name: str) -> str:
+    return POLICY_DISPLAY.get(str(name), str(name).replace("_", " "))
+
+
+def _display_case_id(case_id: str) -> str:
+    return str(case_id).replace("_", " ").title()
 
 
 def _bootstrap_predictor_difference(dataframe: pd.DataFrame, task: BootstrapTask, rng: np.random.Generator) -> dict[str, float | bool]:

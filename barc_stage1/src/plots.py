@@ -776,11 +776,11 @@ def plot_delta_max_vs_slowdown_final(predictive_df: pd.DataFrame) -> Path:
 
 def plot_lower_bound_vs_actual_final(lower_bound_df: pd.DataFrame) -> Path:
     subset = lower_bound_df[np.isfinite(lower_bound_df["T_exe"])].copy()
-    figure, axis = plt.subplots(figsize=(3.45, 2.8))
+    figure, axis = plt.subplots(figsize=(3.0, 2.35))
     scatter = axis.scatter(
         subset["predicted_lower_bound"],
         subset["T_exe"],
-        s=18,
+        s=15,
         c=subset["gap"],
         cmap="cividis",
         alpha=0.72,
@@ -800,16 +800,17 @@ def plot_lower_bound_vs_actual_final(lower_bound_df: pd.DataFrame) -> Path:
             transform=axis.transAxes,
             va="top",
             ha="left",
-            fontsize=7.2,
+            fontsize=5.4,
             bbox={"facecolor": "white", "alpha": 0.78, "edgecolor": "#cccccc", "boxstyle": "round,pad=0.18"},
         )
-    axis.set_xlabel("Predicted lower bound", fontsize=PAPER_LABEL_SIZE)
-    axis.set_ylabel(r"Observed $T_{\mathrm{exe}}$", fontsize=PAPER_LABEL_SIZE)
+    axis.set_xlabel("Predicted lower bound", fontsize=PAPER_LABEL_SIZE - 1.6)
+    axis.set_ylabel(r"Observed $T_{\mathrm{exe}}$", fontsize=PAPER_LABEL_SIZE - 1.6)
     _apply_paper_axis_style(axis)
-    figure.subplots_adjust(left=0.18, right=0.98, bottom=0.2, top=0.97)
-    colorbar = figure.colorbar(scatter, ax=axis, fraction=0.055, pad=0.03)
-    colorbar.set_label("Gap (cycles)", fontsize=PAPER_LABEL_SIZE - 0.5)
-    colorbar.ax.tick_params(labelsize=PAPER_TICK_SIZE - 0.5)
+    axis.tick_params(axis="both", labelsize=PAPER_TICK_SIZE - 1.3)
+    figure.subplots_adjust(left=0.2, right=0.962, bottom=0.2, top=0.97)
+    colorbar = figure.colorbar(scatter, ax=axis, fraction=0.05, pad=0.025)
+    colorbar.set_label("Gap (cycles)", fontsize=PAPER_LABEL_SIZE - 1.8)
+    colorbar.ax.tick_params(labelsize=PAPER_TICK_SIZE - 1.5)
     return _save_final_figure_bundle(figure, "lower_bound_vs_actual_final")
 
 

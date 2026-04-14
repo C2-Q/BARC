@@ -22,7 +22,9 @@ This artifact evaluates that mismatch using one structural indicator, `slack_rat
 
 The figure below illustrates the core problem. The blue curve is cumulative T-state demand from a compiled schedule, while the dashed line is the cumulative supply envelope under delivery rate `C` and buffer `B`. When demand rises above supply, backlog accumulates. That backlog delays execution even if the original static schedule is short. The peak gap, `delta_max`, is the main schedule-level indicator used in the paper.
 
-![Delta max illustration](/Users/mac/Documents/GitHub/BARC/barc_stage1/outputs/figures/delta_max_illustration.png)
+![Delta max illustration](barc_stage1/outputs/figures/delta_max_illustration.png)
+
+Paper figure files: [delta_max_illustration.png](barc_stage1/outputs/figures/delta_max_illustration.png), [delta_max_illustration.pdf](barc_stage1/outputs/figures/delta_max_illustration.pdf)
 
 The main outputs of the artifact are:
 

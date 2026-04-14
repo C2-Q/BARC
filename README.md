@@ -20,9 +20,9 @@ This artifact evaluates that mismatch using one structural indicator, `slack_rat
 
 ## Key Figure
 
-The figure below summarizes the structure-to-execution story used throughout the paper: structural flexibility influences delivery pressure, and delivery pressure in turn predicts slowdown.
+The figure below illustrates the core problem. The blue curve is cumulative T-state demand from a compiled schedule, while the dashed line is the cumulative supply envelope under delivery rate `C` and buffer `B`. When demand rises above supply, backlog accumulates. That backlog delays execution even if the original static schedule is short. The peak gap, `delta_max`, is the main schedule-level indicator used in the paper.
 
-![Structure to execution chain](barc_stage1/outputs/figures/final_paper/structure_to_execution_chain_empirical_final.png)
+![Delta max illustration](/Users/mac/Documents/GitHub/BARC/barc_stage1/outputs/figures/delta_max_illustration.png)
 
 The main outputs of the artifact are:
 

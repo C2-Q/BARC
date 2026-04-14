@@ -1,12 +1,28 @@
-# BARC QCE Submission Artifact
+# BARC
 
 ## Overview
 
-This repository accompanies the QCE submission:
+This repository accompanies the paper:
 
 `When T-Depth Misleads: Predicting Fault-Tolerant Quantum Execution Slowdown under Magic-State Delivery Constraints`
 
+This paper has been submitted to QCE 2026.
+
 The artifact studies how circuit dependency structure interacts with a fixed delivery rate `C` and a fixed buffer capacity `B`, and packages the paper-facing figures and tables used by the manuscript.
+
+## Problem
+
+Fault-tolerant quantum compilers often optimize for static T-depth, but bounded magic-state delivery changes what actually runs fast. A schedule can look shallow on paper and still execute poorly if it creates bursts of T-gate demand that exceed delivery capacity and force protected waiting.
+
+## Contribution
+
+This artifact evaluates that mismatch using one structural indicator, `slack_ratio`, and one schedule-level indicator, `delta_max`. It shows when T-depth becomes misleading, validates a fixed-schedule lower bound on executable makespan, and packages the paper-facing figures and tables behind those claims.
+
+## Key Figure
+
+The figure below summarizes the structure-to-execution story used throughout the paper: structural flexibility influences delivery pressure, and delivery pressure in turn predicts slowdown.
+
+![Structure to execution chain](barc_stage1/outputs/figures/final_paper/structure_to_execution_chain_empirical_final.png)
 
 The main outputs of the artifact are:
 

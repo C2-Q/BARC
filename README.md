@@ -62,35 +62,61 @@ Dependency file: [`barc_stage1/requirements.txt`](barc_stage1/requirements.txt)
 python -m pip install -r barc_stage1/requirements.txt
 ```
 
-Run the full paper pipeline from the artifact root:
+### Reproduce the paper figures
+
+The nine figures referenced by the manuscript live in
+[`barc_stage1/outputs/figures/final_paper/`](barc_stage1/outputs/figures/final_paper/)
+and match the LaTeX `\includegraphics{figures/final_paper/<name>.pdf}` paths
+exactly. Run the following from the artifact root in order; the final
+`publish_paper_figures.py` step renames and copies each figure into
+`final_paper/` under its manuscript name:
 
 ```bash
 cd barc_stage1
+
+# 1. Main pipeline (predictive analysis, lower-bound table, real-trace scaling).
 python scripts/run_qce_paper.py
+
+# 2. Real-trace QFT comparison (produces qft_vs_other_real_traces.{pdf,png}).
+python scripts/run_qft_real_trace_scan.py
+
+# 3. Representative finite-gap cases for the lower bound.
+python scripts/run_posthoc_analysis.py
+
+# 4. Appendix robustness (stochastic supply + route-induced effective capacity).
+python scripts/run_stochastic_supply_sensitivity.py
+python scripts/run_routing_proxy_sensitivity.py
+python scripts/build_appendix_robustness_figure.py
+
+# 5. Layout-revised versions of the predictor-comparison and lower-bound figures.
+python scripts/update_selected_final_paper_figures.py
+python scripts/build_final_paper_revised_figures.py
+
+# 6. Publish: copy + rename each figure into outputs/figures/final_paper/.
+python scripts/publish_paper_figures.py
 ```
 
-Run the test suite:
+After step 6, [`outputs/figures/final_paper/`](barc_stage1/outputs/figures/final_paper/)
+contains exactly the figures used by the paper. See
+[`FIGURE_INDEX.md`](barc_stage1/outputs/figures/final_paper/FIGURE_INDEX.md)
+for the file -> manuscript-label mapping.
+
+### Tests
 
 ```bash
 cd barc_stage1
 python -m unittest discover -s tests -p 'test_*.py'
 ```
 
-Prepare a clean manuscript bundle containing the final PDF figures and key tables referenced by the paper:
+### Submission bundle
+
+Prepare a clean manuscript bundle containing the final PDF figures and key
+tables referenced by the paper:
 
 Bundle script: [`barc_stage1/scripts/prepare_submission_bundle.py`](barc_stage1/scripts/prepare_submission_bundle.py)
 
 ```bash
 python barc_stage1/scripts/prepare_submission_bundle.py
-```
-
-Optional appendix robustness assets can be regenerated with:
-
-```bash
-cd barc_stage1
-python scripts/run_stochastic_supply_sensitivity.py
-python scripts/run_routing_proxy_sensitivity.py
-python scripts/build_appendix_robustness_figure.py
 ```
 
 The main pipeline generates:
@@ -115,18 +141,21 @@ Running `python barc_stage1/scripts/prepare_submission_bundle.py` creates [`subm
 ## Manuscript Figure Map
 
 These are the figure PDFs directly referenced by the current paper draft.
+File names match the LaTeX `\includegraphics{figures/final_paper/<name>.pdf}`
+paths.
 
-- [`figures/delta_max_illustration.pdf`](barc_stage1/outputs/figures/delta_max_illustration.pdf)
-- [`figures/final_paper/predictor_comparison_final.pdf`](barc_stage1/outputs/figures/final_paper/predictor_comparison_final.pdf)
-- [`figures/final_paper/incremental_predictive_gain_final.pdf`](barc_stage1/outputs/figures/final_paper/incremental_predictive_gain_final.pdf)
-- [`figures/final_paper/structure_to_execution_chain_empirical_final.pdf`](barc_stage1/outputs/figures/final_paper/structure_to_execution_chain_empirical_final.pdf)
-- [`figures/final_paper/delta_max_vs_slowdown_final.pdf`](barc_stage1/outputs/figures/final_paper/delta_max_vs_slowdown_final.pdf)
-- [`figures/final_paper/lower_bound_vs_actual_final.pdf`](barc_stage1/outputs/figures/final_paper/lower_bound_vs_actual_final.pdf)
-- [`figures/final_paper/qft_vs_other_real_traces_final.pdf`](barc_stage1/outputs/figures/final_paper/qft_vs_other_real_traces_final.pdf)
-- [`figures/final_paper/real_trace_scaling_final.pdf`](barc_stage1/outputs/figures/final_paper/real_trace_scaling_final.pdf)
-- [`figures/final_paper/qft_approximation_reduced_grid_final.pdf`](barc_stage1/outputs/figures/final_paper/qft_approximation_reduced_grid_final.pdf)
-- [`figures/final_paper/robustness_stochastic_routing_summary_final.pdf`](barc_stage1/outputs/figures/final_paper/robustness_stochastic_routing_summary_final.pdf)
-- [`figures/final_paper/lower_bound_gap_cases_final.pdf`](barc_stage1/outputs/figures/final_paper/lower_bound_gap_cases_final.pdf)
+| Figure | Manuscript label |
+| --- | --- |
+| [`figures/delta_max_illustration.pdf`](barc_stage1/outputs/figures/delta_max_illustration.pdf) | (key illustration) |
+| [`figures/final_paper/predictor_comparison.pdf`](barc_stage1/outputs/figures/final_paper/predictor_comparison.pdf) | `fig:predictor_comparison` |
+| [`figures/final_paper/incremental_predictive_gain.pdf`](barc_stage1/outputs/figures/final_paper/incremental_predictive_gain.pdf) | `fig:incremental_gain` |
+| [`figures/final_paper/structure_execution_chain.pdf`](barc_stage1/outputs/figures/final_paper/structure_execution_chain.pdf) | `fig:empirical_chain` |
+| [`figures/final_paper/lower_bound_vs_actual.pdf`](barc_stage1/outputs/figures/final_paper/lower_bound_vs_actual.pdf) | `fig:lower_bound` |
+| [`figures/final_paper/qft_vs_real_traces.pdf`](barc_stage1/outputs/figures/final_paper/qft_vs_real_traces.pdf) | `fig:qft_vs_real` |
+| [`figures/final_paper/real_trace_scaling.pdf`](barc_stage1/outputs/figures/final_paper/real_trace_scaling.pdf) | `fig:real_scaling` |
+| [`figures/final_paper/qft_approximation.pdf`](barc_stage1/outputs/figures/final_paper/qft_approximation.pdf) | `fig:qft_approx` |
+| [`figures/final_paper/appendix_robustness_supply_routing.pdf`](barc_stage1/outputs/figures/final_paper/appendix_robustness_supply_routing.pdf) | `fig:appendix_robustness_supply_routing` |
+| [`figures/final_paper/appendix_gap_cases.pdf`](barc_stage1/outputs/figures/final_paper/appendix_gap_cases.pdf) | `fig:appendix_gap_cases` |
 
 ## Manuscript Table Map
 

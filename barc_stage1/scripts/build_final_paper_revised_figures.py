@@ -1,3 +1,4 @@
+# v2 (2026-04-25): layout fixes, family-coded control markers, raw QFT peak-window traces, consolidated gap-case legend
 from __future__ import annotations
 
 import math
@@ -65,14 +66,12 @@ def main() -> None:
     FINAL_PAPER_REVISED_DIR.mkdir(parents=True, exist_ok=True)
 
     predictive_df = pd.read_csv(TABLE_DIR / "predictive_static_dataset.csv")
-    incremental_df = pd.read_csv(TABLE_DIR / "incremental_predictive_models.csv")
     lower_bound_df = pd.read_csv(TABLE_DIR / "lower_bound_validation.csv")
     qft_reduced_df = pd.read_csv(TABLE_DIR / "qft_approximation_reduced_grid.csv")
     grid_df = pd.read_csv(TABLE_DIR / "stage1_grid_scan.csv")
 
     outputs = [
         plot_predictor_comparison_revised(predictive_df),
-        plot_incremental_predictive_gain_revised(predictive_df, incremental_df),
         plot_lower_bound_vs_actual_revised(lower_bound_df),
         plot_qft_approximation_reduced_grid_revised(qft_reduced_df),
         plot_lower_bound_gap_cases_revised(lower_bound_df, grid_df),
@@ -82,7 +81,7 @@ def main() -> None:
 
 
 def plot_predictor_comparison_revised(predictive_df: pd.DataFrame) -> Path:
-    figure, axes = plt.subplots(1, 3, figsize=(10.5, 3.35))
+    figure, axes = plt.subplots(1, 3, figsize=(11.4, 4.0), constrained_layout=True)
     task_specs = [
         ("stall", "Classification AUC", "Stall"),
         ("inversion", "Classification AUC", "Inversion"),
@@ -91,24 +90,56 @@ def plot_predictor_comparison_revised(predictive_df: pd.DataFrame) -> Path:
 
     for axis, (task, ylabel, title) in zip(axes, task_specs, strict=True):
         slice_df = _build_predictor_slice_distribution_overall(predictive_df, task)
-        _draw_predictor_boxplot_panel(axis, slice_df, "score", ylabel, title)
+        family_overlay_df = _build_predictor_family_overlay_distribution(predictive_df, task)
+        _draw_predictor_boxplot_panel(axis, slice_df, family_overlay_df, "score", ylabel, title, task)
 
-    handles = [
+    predictor_handles = [
         Patch(facecolor=PREDICTOR_COLORS[predictor], edgecolor="#444444", label=PREDICTOR_LABELS[predictor], alpha=0.72)
         for predictor in PREDICTOR_ORDER
     ]
+    family_handles = [
+        Line2D(
+            [0],
+            [0],
+            marker="^",
+            markersize=5.5,
+            linestyle="none",
+            markerfacecolor="none",
+            markeredgecolor="#555555",
+            label="Low-compressibility slice (control regime)",
+        ),
+        Line2D(
+            [0],
+            [0],
+            marker="o",
+            markersize=5.0,
+            linestyle="none",
+            markerfacecolor="#555555",
+            markeredgecolor="#555555",
+            label="High / medium compressibility slice",
+        ),
+    ]
     figure.legend(
-        handles=handles,
-        loc="lower center",
-        ncol=3,
+        handles=predictor_handles,
+        loc="upper left",
+        bbox_to_anchor=(1.01, 1.0),
+        ncol=1,
         frameon=False,
-        fontsize=PAPER_LEGEND_SIZE,
-        bbox_to_anchor=(0.5, -0.01),
-        columnspacing=1.0,
+        fontsize=12,
+        borderaxespad=0.0,
         handletextpad=0.5,
     )
-    figure.subplots_adjust(left=0.065, right=0.995, bottom=0.27, top=0.92, wspace=0.28)
-    return _save_revised_figure(figure, "predictor_comparison_final")
+    figure.legend(
+        handles=family_handles,
+        loc="lower center",
+        bbox_to_anchor=(0.44, -0.08),
+        ncol=2,
+        frameon=False,
+        fontsize=10.5,
+        columnspacing=1.2,
+        handletextpad=0.5,
+    )
+    return _save_revised_figure(figure, "predictor_comparison_final_v2")
 
 
 def plot_incremental_predictive_gain_revised(
@@ -138,7 +169,13 @@ def plot_lower_bound_vs_actual_revised(lower_bound_df: pd.DataFrame) -> Path:
     cdf = np.arange(1, len(sorted_gaps) + 1) / max(1, len(sorted_gaps))
     within_one = float((gaps <= 1.0 + 1e-9).mean()) if len(gaps) else 0.0
 
-    figure, axes = plt.subplots(1, 2, figsize=(7.05, 3.0))
+    figure, axes = plt.subplots(
+        1,
+        2,
+        figsize=(7.5, 3.2),
+        constrained_layout=True,
+        gridspec_kw={"wspace": 0.35},
+    )
 
     scatter = axes[0].scatter(
         subset["predicted_lower_bound"],
@@ -154,43 +191,36 @@ def plot_lower_bound_vs_actual_revised(lower_bound_df: pd.DataFrame) -> Path:
         lower = float(min(subset["predicted_lower_bound"].min(), subset["T_exe"].min()))
         upper = float(max(subset["predicted_lower_bound"].max(), subset["T_exe"].max()))
         axes[0].plot([lower, upper], [lower, upper], color="#444444", linewidth=1.0, zorder=2)
-        axes[0].text(
-            0.05,
-            0.95,
-            "Identity line",
-            transform=axes[0].transAxes,
-            ha="left",
-            va="top",
-            fontsize=7.2,
-            color="#444444",
-        )
+    axes[0].set_title("Lower bound vs observed makespan", fontsize=10, fontweight="bold")
     axes[0].set_xlabel("Predicted lower bound", fontsize=PAPER_LABEL_SIZE)
     axes[0].set_ylabel(r"Observed $T_{\mathrm{exe}}$", fontsize=PAPER_LABEL_SIZE)
     _apply_paper_axis_style(axes[0])
     colorbar = figure.colorbar(scatter, ax=axes[0], fraction=0.05, pad=0.025)
-    colorbar.set_label("Gap (cycles)", fontsize=PAPER_LABEL_SIZE - 1.0)
-    colorbar.ax.tick_params(labelsize=PAPER_TICK_SIZE - 1.0)
+    colorbar.set_label(r"Gap = $T_{\mathrm{exe}} - \mathrm{bound}$ (cycles)", fontsize=8)
+    colorbar.ax.tick_params(labelsize=8)
 
     axes[1].step(sorted_gaps, cdf, where="post", color="#1f78b4", linewidth=2.0)
     axes[1].fill_between(sorted_gaps, cdf, step="post", alpha=0.15, color="#1f78b4")
     axes[1].axvline(1.0, color="#b22222", linestyle="--", linewidth=1.0)
     axes[1].axhline(within_one, color="#b22222", linestyle="--", linewidth=1.0)
     axes[1].scatter([1.0], [within_one], color="#b22222", s=18, zorder=4)
-    axes[1].text(
-        1.05,
-        min(0.98, within_one + 0.035),
+    axes[1].annotate(
         f"{within_one * 100:.1f}% within 1 cycle",
-        fontsize=7.8,
+        xy=(1.0, within_one),
+        xytext=(1.5, min(0.98, within_one + 0.05)),
+        textcoords="data",
+        fontsize=8,
         color="#8b1e1e",
+        bbox={"facecolor": "white", "alpha": 0.85, "edgecolor": "none", "pad": 2},
     )
+    axes[1].set_title("Distribution of gap to bound", fontsize=10, fontweight="bold")
     axes[1].set_xlabel("Gap to lower bound (cycles)", fontsize=PAPER_LABEL_SIZE)
-    axes[1].set_ylabel("CDF", fontsize=PAPER_LABEL_SIZE)
+    axes[1].set_ylabel("Cumulative fraction of instances", fontsize=PAPER_LABEL_SIZE)
     axes[1].set_xlim(left=0.0)
     axes[1].set_ylim(0.0, 1.02)
     _apply_paper_axis_style(axes[1])
 
-    figure.subplots_adjust(left=0.09, right=0.98, bottom=0.2, top=0.95, wspace=0.24)
-    return _save_revised_figure(figure, "lower_bound_vs_actual_final")
+    return _save_revised_figure(figure, "lower_bound_vs_actual_final_v2")
 
 
 def plot_qft_approximation_reduced_grid_revised(qft_reduced_df: pd.DataFrame) -> Path:
@@ -200,47 +230,90 @@ def plot_qft_approximation_reduced_grid_revised(qft_reduced_df: pd.DataFrame) ->
     )
     representative_C = 2
     representative_B = 8
+    summary_df = pd.read_csv(TABLE_DIR / "qft_approximation_reduced_grid_summary.csv")
+    exact_color = "#2b6cb0"
+    approx_color = "#2f855a"
+    supply_color = "#444444"
+    excess_color = "#e53e3e"
 
-    figure, axes = plt.subplots(1, 2, figsize=(7.3, 3.0))
+    figure = plt.figure(figsize=(7.8, 4.6), constrained_layout=True)
+    grid_spec = figure.add_gridspec(2, 2, width_ratios=[1.0, 1.1])
+    ax_exact_step = figure.add_subplot(grid_spec[0, 0])
+    ax_approx_step = figure.add_subplot(grid_spec[1, 0], sharex=ax_exact_step, sharey=ax_exact_step)
+    ax_cum = figure.add_subplot(grid_spec[:, 1])
 
-    exact_windowed = _window_mean(np.array(exact_trace, dtype=float), target_points=900)
-    approx_windowed = _window_mean(np.array(approx_trace, dtype=float), target_points=900)
-    x_windowed = np.linspace(0.0, 1.0, len(exact_windowed))
-    axes[0].plot(x_windowed, exact_windowed, color="#f58518", linewidth=1.3, alpha=0.95, label="Exact")
-    axes[0].plot(x_windowed, approx_windowed, color="#4c78a8", linewidth=1.3, alpha=0.95, label="Degree-4 approx.")
-    axes[0].text(
-        0.03,
-        0.08,
-        "Peak demand: exact=10, approx.=6",
-        transform=axes[0].transAxes,
-        ha="left",
-        va="bottom",
-        fontsize=7.4,
-        bbox={"facecolor": "white", "alpha": 0.82, "edgecolor": "#cccccc", "boxstyle": "round,pad=0.18"},
+    exact_offsets, exact_window, exact_local_peak = _extract_peak_window(np.array(exact_trace, dtype=int), half_window=1000)
+    approx_offsets, approx_window, approx_local_peak = _extract_peak_window(np.array(approx_trace, dtype=int), half_window=1000)
+
+    _plot_qft_step_panel(
+        ax_exact_step,
+        exact_offsets,
+        exact_window,
+        representative_C,
+        exact_color,
+        "Exact QFT (n=12)",
+        exact_local_peak,
     )
-    axes[0].set_xlabel("Normalized logical cycle", fontsize=PAPER_LABEL_SIZE)
-    axes[0].set_ylabel("Mean T demand per window", fontsize=PAPER_LABEL_SIZE)
-    axes[0].legend(loc="upper right", frameon=False, fontsize=PAPER_LEGEND_SIZE)
-    _apply_paper_axis_style(axes[0])
+    _plot_qft_step_panel(
+        ax_approx_step,
+        approx_offsets,
+        approx_window,
+        representative_C,
+        approx_color,
+        "Degree-4 approximate QFT",
+        approx_local_peak,
+    )
+    ax_exact_step.tick_params(labelbottom=False)
+    ax_exact_step.set_ylabel("T-gates per step", fontsize=9)
+    ax_approx_step.set_ylabel("T-gates per step", fontsize=9)
+    ax_approx_step.set_xlabel("Logical time-step offset (window around peak)", fontsize=9)
+    ax_exact_step.set_ylim(0, 11)
+    ax_approx_step.set_ylim(0, 11)
 
-    prefix_end = _representative_prefix_end(exact_trace, representative_C, representative_B)
-    x_prefix = np.arange(1, prefix_end + 1)
-    exact_cumulative = np.cumsum(np.array(exact_trace[:prefix_end], dtype=int))
-    approx_cumulative = np.cumsum(np.array(approx_trace[:prefix_end], dtype=int))
-    supply = representative_C * x_prefix + representative_B
-    x_plot, exact_plot = _downsample_series(x_prefix, exact_cumulative, max_points=1800)
-    _, approx_plot = _downsample_series(x_prefix, approx_cumulative, max_points=1800)
-    _, supply_plot = _downsample_series(x_prefix, supply, max_points=1800)
-    axes[1].plot(x_plot, exact_plot, color="#f58518", linewidth=1.35, label="Exact cumulative demand")
-    axes[1].plot(x_plot, approx_plot, color="#4c78a8", linewidth=1.35, label="Approx. cumulative demand")
-    axes[1].plot(x_plot, supply_plot, color="#444444", linewidth=1.1, linestyle="--", label=rf"Supply envelope ($C={representative_C}, B={representative_B}$)")
-    axes[1].set_xlabel("Logical cycle", fontsize=PAPER_LABEL_SIZE)
-    axes[1].set_ylabel("Cumulative T demand", fontsize=PAPER_LABEL_SIZE)
-    axes[1].legend(loc="upper left", frameon=False, fontsize=7.0)
-    _apply_paper_axis_style(axes[1])
+    x_full = np.arange(1, len(exact_trace) + 1)
+    exact_cumulative = np.cumsum(np.array(exact_trace, dtype=int))
+    approx_cumulative = np.cumsum(np.array(approx_trace, dtype=int))
+    supply = representative_C * x_full + representative_B
+    x_plot, exact_plot = _downsample_series(x_full, exact_cumulative, max_points=2200)
+    _, approx_plot = _downsample_series(x_full, approx_cumulative, max_points=2200)
+    _, supply_plot = _downsample_series(x_full, supply, max_points=2200)
+    ax_cum.plot(x_plot, exact_plot, color=exact_color, linewidth=1.35, label="Exact cumulative demand")
+    ax_cum.plot(x_plot, approx_plot, color=approx_color, linewidth=1.35, label="Approx. cumulative demand")
+    ax_cum.plot(
+        x_plot,
+        supply_plot,
+        color=supply_color,
+        linewidth=1.1,
+        linestyle="--",
+        label=rf"Supply envelope ($C={representative_C}, B={representative_B}$)",
+    )
+    ax_cum.set_xlabel("Logical cycle", fontsize=9)
+    ax_cum.set_ylabel("Cumulative T demand", fontsize=9)
+    ax_cum.legend(loc="upper left", fontsize=8, frameon=True, framealpha=0.85)
+    _apply_paper_axis_style(ax_cum)
 
-    figure.subplots_adjust(left=0.095, right=0.995, bottom=0.2, top=0.95, wspace=0.28)
-    return _save_revised_figure(figure, "qft_approximation_reduced_grid_final")
+    exact_overall = summary_df[(summary_df["variant"] == "exact") & (summary_df["C"].isna())].iloc[0]
+    approx_overall = summary_df[(summary_df["variant"] == "approx_deg_4") & (summary_df["C"].isna())].iloc[0]
+    summary_text = "\n".join(
+        [
+            f"DAG depth: {len(exact_trace):,} (unchanged)",
+            f"T-count:   {int(sum(exact_trace))/1e6:.2f}M \u2192 {int(sum(approx_trace))/1e6:.2f}M",
+            f"Peak:      {int(np.max(exact_trace))} \u2192 {int(np.max(approx_trace))}",
+            f"Mean \u0394max: {int(round(exact_overall['mean_delta_max'])):,} \u2192 {int(round(approx_overall['mean_delta_max'])):,}",
+        ]
+    )
+    ax_cum.text(
+        0.98,
+        0.04,
+        summary_text,
+        transform=ax_cum.transAxes,
+        ha="right",
+        va="bottom",
+        fontsize=7.5,
+        family="monospace",
+        bbox={"facecolor": "white", "alpha": 0.92, "edgecolor": "#d0d0d0", "boxstyle": "round,pad=0.25"},
+    )
+    return _save_revised_figure(figure, "qft_approximation_reduced_grid_final_v2")
 
 
 def plot_lower_bound_gap_cases_revised(lower_bound_df: pd.DataFrame, grid_df: pd.DataFrame) -> Path:
@@ -257,18 +330,41 @@ def plot_lower_bound_gap_cases_revised(lower_bound_df: pd.DataFrame, grid_df: pd
         & (enriched["gap"] > 0.0)
     ].copy()
     selected = _select_representative_gap_cases(enriched)
+    selected = _reorder_gap_cases_for_diversity(selected, enriched)
 
-    figure, axes = plt.subplots(len(selected), 2, figsize=(11.8, 2.8 * max(1, len(selected))), sharex=False)
-    if len(selected) == 1:
-        axes = np.array([axes])
+    figure = plt.figure(figsize=(8.3, 6.7), constrained_layout=True)
+    outer_grid = figure.add_gridspec(2, 2, top=0.92)
+    case_axes: list[tuple[plt.Axes, plt.Axes]] = []
+    for index in range(min(4, len(selected))):
+        row_index, column_index = divmod(index, 2)
+        sub_grid = outer_grid[row_index, column_index].subgridspec(1, 2, width_ratios=[1.0, 1.2], wspace=0.35)
+        case_axes.append(
+            (
+                figure.add_subplot(sub_grid[0]),
+                figure.add_subplot(sub_grid[1]),
+            )
+        )
 
-    for index, row in enumerate(selected.itertuples(index=False), start=1):
+    for index, row in enumerate(selected.head(4).itertuples(index=False), start=1):
         case_id = f"case_{index}"
         reconstruction = _reconstruct_gap_case(row)
-        _plot_gap_case_row_revised(axes[index - 1], reconstruction, case_id)
+        _plot_gap_case_row_revised(case_axes[index - 1], reconstruction, case_id)
 
-    figure.tight_layout()
-    return _save_revised_figure(figure, "lower_bound_gap_cases_final")
+    legend_handles = [
+        Line2D([0], [0], color="#2b6cb0", linewidth=1.25, label="Attempted demand"),
+        Line2D([0], [0], color="#2f855a", linewidth=1.1, linestyle="--", label="Served demand"),
+        Line2D([0], [0], color="#dd6b20", linewidth=1.25, label="Buffer stock"),
+        Patch(facecolor="#e53e3e", edgecolor="none", alpha=0.18, label="Stall cycle"),
+    ]
+    figure.legend(
+        handles=legend_handles,
+        loc="upper center",
+        ncol=4,
+        bbox_to_anchor=(0.5, 1.04),
+        fontsize=7.8,
+        frameon=False,
+    )
+    return _save_revised_figure(figure, "lower_bound_gap_cases_final_v2")
 
 
 def _build_predictor_slice_distribution_overall(predictive_df: pd.DataFrame, task: str) -> pd.DataFrame:
@@ -302,7 +398,15 @@ def _build_predictor_slice_distribution_overall(predictive_df: pd.DataFrame, tas
     return pd.DataFrame(rows)
 
 
-def _draw_predictor_boxplot_panel(axis: plt.Axes, dataframe: pd.DataFrame, value_col: str, ylabel: str, title: str) -> None:
+def _draw_predictor_boxplot_panel(
+    axis: plt.Axes,
+    dataframe: pd.DataFrame,
+    overlay_df: pd.DataFrame,
+    value_col: str,
+    ylabel: str,
+    title: str,
+    task: str,
+) -> None:
     if dataframe.empty:
         axis.text(0.5, 0.5, "No informative slices", ha="center", va="center", transform=axis.transAxes)
         axis.set_axis_off()
@@ -327,20 +431,53 @@ def _draw_predictor_boxplot_panel(axis: plt.Axes, dataframe: pd.DataFrame, value
     for position, predictor in zip(positions, PREDICTOR_ORDER, strict=True):
         values = dataframe[dataframe["predictor"] == predictor][value_col].astype(float).tolist()
         jitter = np.linspace(-0.08, 0.08, len(values)) if len(values) > 1 else np.array([0.0])
-        axis.scatter(
-            np.full(len(values), position) + jitter,
-            values,
-            s=11,
-            color=PREDICTOR_COLORS[predictor],
-            alpha=0.28,
-            edgecolors="none",
-            zorder=3,
-        )
+        if task == "slowdown_ratio":
+            axis.scatter(
+                np.full(len(values), position) + jitter,
+                values,
+                s=10,
+                color=PREDICTOR_COLORS[predictor],
+                alpha=0.18,
+                edgecolors="none",
+                zorder=2,
+            )
+        overlay_subset = overlay_df[overlay_df["predictor"] == predictor].copy()
+        if task == "slowdown_ratio" or overlay_subset.empty:
+            continue
+        overlay_subset = overlay_subset.sort_values(["family", "C", "B"]).reset_index(drop=True)
+        jitter = np.linspace(-0.1, 0.1, len(overlay_subset)) if len(overlay_subset) > 1 else np.array([0.0])
+        for offset, row in zip(jitter, overlay_subset.itertuples(index=False), strict=True):
+            if row.family == "low_compressibility":
+                axis.scatter(
+                    position + offset,
+                    row.score,
+                    s=55,
+                    marker="^",
+                    facecolors="white",
+                    edgecolors=PREDICTOR_COLORS[predictor],
+                    alpha=1.0,
+                    linewidths=1.4,
+                    zorder=4,
+                )
+            else:
+                axis.scatter(
+                    position + offset,
+                    row.score,
+                    s=18,
+                    marker="o",
+                    facecolors=PREDICTOR_COLORS[predictor],
+                    edgecolors="white",
+                    alpha=0.8,
+                    linewidths=0.25,
+                    zorder=4,
+                )
 
     axis.set_xticks(positions, [PREDICTOR_LABELS[predictor] for predictor in PREDICTOR_ORDER])
-    axis.set_ylabel(ylabel, fontsize=PAPER_LABEL_SIZE)
-    axis.set_title(f"{title}\n(per $(C,B)$ slice)", fontsize=PAPER_LABEL_SIZE)
+    axis.set_ylabel(ylabel, fontsize=12)
+    axis.set_title(title, fontsize=14, fontweight="bold")
+    axis.tick_params(axis="both", labelsize=11)
     _apply_paper_axis_style(axis, horizontal_grid=True)
+    axis.tick_params(axis="both", labelsize=11)
     if "AUC" in ylabel:
         axis.set_ylim(0.45, 1.03)
     else:
@@ -391,6 +528,34 @@ def _build_incremental_gain_distribution(predictive_df: pd.DataFrame) -> pd.Data
                         }
                     )
                 previous = float(result["metric_value"])
+    return pd.DataFrame(rows)
+
+
+def _build_predictor_family_overlay_distribution(predictive_df: pd.DataFrame, task: str) -> pd.DataFrame:
+    if task == "slowdown_ratio":
+        return pd.DataFrame(columns=["family", "C", "B", "predictor", "score"])
+
+    rows: list[dict[str, object]] = []
+    for (family, C, B), subset in predictive_df.groupby(["family", "C", "B"], sort=True):
+        if len(subset) < 4:
+            continue
+        labels = subset[task].astype(int).to_numpy()
+        for predictor in PREDICTOR_ORDER:
+            x = subset[predictor].astype(float).to_numpy()
+            if len(np.unique(labels)) < 2 or np.allclose(x, x[0]):
+                score_value = 0.5
+            else:
+                score_info = _binary_metric_eval(x, labels)
+                score_value = float(score_info["roc_auc"])
+            rows.append(
+                {
+                    "family": family,
+                    "C": int(C),
+                    "B": int(B),
+                    "predictor": predictor,
+                    "score": score_value,
+                }
+            )
     return pd.DataFrame(rows)
 
 
@@ -460,7 +625,83 @@ def _downsample_series(x: np.ndarray, y: np.ndarray, max_points: int) -> tuple[n
     return x[indices], y[indices]
 
 
-def _plot_gap_case_row_revised(axes_row: np.ndarray, reconstruction: dict[str, object], case_id: str) -> None:
+def _extract_peak_window(trace: np.ndarray, half_window: int) -> tuple[np.ndarray, np.ndarray, int]:
+    peak_index = int(np.argmax(trace)) if len(trace) else 0
+    start = max(0, peak_index - half_window)
+    end = min(len(trace), peak_index + half_window + 1)
+    values = trace[start:end]
+    offsets = np.arange(start, end) - peak_index
+    local_peak = int(np.argmax(values)) if len(values) else 0
+    return offsets.astype(int), values.astype(int), local_peak
+
+
+def _plot_qft_step_panel(
+    axis: plt.Axes,
+    x_offsets: np.ndarray,
+    demand_values: np.ndarray,
+    capacity: int,
+    color: str,
+    label: str,
+    local_peak_index: int,
+) -> None:
+    axis.step(x_offsets, demand_values, where="mid", color=color, linewidth=0.9)
+    axis.fill_between(x_offsets, 0, demand_values, step="mid", color=color, alpha=0.5)
+    axis.axhline(capacity, color="#777777", linestyle="--", linewidth=1.0)
+    axis.fill_between(
+        x_offsets,
+        capacity,
+        demand_values,
+        where=demand_values > capacity,
+        step="mid",
+        color="#e53e3e",
+        alpha=0.35,
+    )
+    peak_x = int(x_offsets[local_peak_index]) if len(x_offsets) else 0
+    peak_y = int(demand_values[local_peak_index]) if len(demand_values) else 0
+    axis.annotate(
+        f"peak = {peak_y}",
+        xy=(peak_x, peak_y),
+        xytext=(8, 2),
+        textcoords="offset points",
+        fontsize=8,
+        color=color,
+        fontweight="bold",
+    )
+    axis.text(
+        0.02,
+        0.92,
+        label,
+        transform=axis.transAxes,
+        va="top",
+        fontsize=9,
+        fontweight="bold",
+        color=color,
+        bbox={"facecolor": "white", "alpha": 0.8, "edgecolor": "none", "pad": 1.5},
+    )
+    _apply_paper_axis_style(axis)
+
+
+def _reorder_gap_cases_for_diversity(selected: pd.DataFrame, enriched: pd.DataFrame) -> pd.DataFrame:
+    if selected.empty:
+        return selected
+    selected = selected.copy().reset_index(drop=True)
+    medium_rows = selected[selected["family"] == "medium_compressibility"]
+    if not medium_rows.empty:
+        medium_row = medium_rows.iloc[[0]]
+        remainder = selected.drop(index=medium_rows.index[0]).reset_index(drop=True)
+        return pd.concat([remainder, medium_row], ignore_index=True)
+
+    medium_pool = enriched[enriched["family"] == "medium_compressibility"].copy()
+    if medium_pool.empty:
+        return selected
+    replacement = medium_pool.assign(distance=(medium_pool["gap"] - selected["gap"].median()).abs()).sort_values(
+        ["distance", "gap", "seed", "policy", "C", "B"]
+    ).iloc[0]
+    selected.loc[selected.index[-1]] = replacement
+    return selected
+
+
+def _plot_gap_case_row_revised(axes_row: tuple[plt.Axes, plt.Axes], reconstruction: dict[str, object], case_id: str) -> None:
     left_axis, right_axis = axes_row
     demand = np.array(reconstruction["demand"], dtype=int)
     cumulative_demand = np.array(reconstruction["cumulative_demand"], dtype=int)
@@ -476,10 +717,16 @@ def _plot_gap_case_row_revised(axes_row: np.ndarray, reconstruction: dict[str, o
     left_axis.plot(logical_x, supply_envelope, color="#444444", linewidth=1.1, linestyle="--", label="Supply envelope")
     left_axis.fill_between(logical_x, supply_envelope, cumulative_demand, where=backlog > 0, color="#e45756", alpha=0.18)
     left_axis.axvline(peak_index, color="#777777", linewidth=0.9, linestyle=":")
-    left_axis.set_ylabel(f"{_display_case_id(case_id)}\nCumulative T", fontsize=PAPER_LABEL_SIZE - 1.0)
-    left_axis.set_xlabel("Logical cycle", fontsize=PAPER_LABEL_SIZE - 1.0)
+    left_axis.set_ylabel("Cumulative T", fontsize=8)
+    left_axis.set_xlabel("Logical cycle", fontsize=8)
     _apply_paper_axis_style(left_axis)
-    left_axis.legend(frameon=False, fontsize=7.0, loc="upper left")
+    left_axis.set_title(
+        f"{_display_case_id(case_id)}: {_display_family(row.family)}, {_display_policy(row.policy)}, "
+        f"gap={float(row.gap):.1f}, Δ={int(row.delta_max)}",
+        fontsize=8,
+        loc="left",
+        pad=2.0,
+    )
 
     real_x = np.arange(1, sim_result.T_exe + 1)
     attempted_demand = np.array([demand[idx] for idx in sim_result.logical_cycle_history], dtype=int)
@@ -487,42 +734,30 @@ def _plot_gap_case_row_revised(axes_row: np.ndarray, reconstruction: dict[str, o
     buffer_stock = np.array(sim_result.buffer_history, dtype=int)
     stall_mask = (attempted_demand > 0) & (served_demand == 0)
 
-    right_axis.step(real_x, attempted_demand, where="post", color="#2c7fb8", linewidth=1.25, label="Attempted demand")
-    right_axis.step(real_x, served_demand, where="post", color="#1a9850", linewidth=1.1, linestyle="--", label="Served demand")
+    right_axis.step(real_x, attempted_demand, where="post", color="#2b6cb0", linewidth=1.25, label="Attempted demand")
+    right_axis.step(real_x, served_demand, where="post", color="#2f855a", linewidth=1.1, linestyle="--", label="Served demand")
     for cycle in real_x[stall_mask]:
         right_axis.axvspan(cycle - 0.5, cycle + 0.5, color="#e45756", alpha=0.12)
-    right_axis.set_ylabel("T demand", fontsize=PAPER_LABEL_SIZE - 1.0)
-    right_axis.set_xlabel("Real cycle", fontsize=PAPER_LABEL_SIZE - 1.0)
+    right_axis.set_ylabel("T demand", fontsize=8, color="#222222")
+    right_axis.set_xlabel("Real cycle", fontsize=8)
     _apply_paper_axis_style(right_axis)
 
     buffer_axis = right_axis.twinx()
-    buffer_axis.step(real_x, buffer_stock, where="post", color="#ff7f0e", linewidth=1.25, label="Buffer stock")
-    buffer_axis.axhline(int(row.B), color="#ff7f0e", linewidth=0.9, linestyle=":")
-    buffer_axis.set_ylabel("Buffer stock", fontsize=PAPER_LABEL_SIZE - 1.0, color="#cc6a00")
-    buffer_axis.tick_params(axis="y", labelsize=PAPER_TICK_SIZE - 1.0, colors="#cc6a00")
+    buffer_axis.step(real_x, buffer_stock, where="post", color="#dd6b20", linewidth=1.25, label="Buffer stock")
+    buffer_axis.axhline(int(row.B), color="#dd6b20", linewidth=0.9, linestyle=":")
+    buffer_axis.set_ylim(0, max(1, int(row.B)))
+    buffer_axis.set_ylabel("Buffer stock", fontsize=8, color="#dd6b20")
+    buffer_axis.tick_params(axis="y", labelsize=8, colors="#dd6b20")
     for spine in buffer_axis.spines.values():
         spine.set_linewidth(0.8)
         spine.set_color("#333333")
-
-    handles = [
-        Line2D([0], [0], color="#2c7fb8", linewidth=1.25, label="Attempted demand"),
-        Line2D([0], [0], color="#1a9850", linewidth=1.1, linestyle="--", label="Served demand"),
-        Line2D([0], [0], color="#ff7f0e", linewidth=1.25, label="Buffer stock"),
-        Patch(facecolor="#e45756", edgecolor="none", alpha=0.12, label="Stall cycle"),
-    ]
-    right_axis.legend(handles=handles, frameon=False, fontsize=6.8, loc="upper left", ncol=2)
-    right_axis.set_title(
-        f"{_display_family(row.family)}, {_display_policy(row.policy)}, gap={float(row.gap):.1f}, "
-        f"Δ={int(row.delta_max)}",
-        fontsize=8.7,
-    )
 
 
 def _save_revised_figure(figure: plt.Figure, stem: str) -> Path:
     FINAL_PAPER_REVISED_DIR.mkdir(parents=True, exist_ok=True)
     path = FINAL_PAPER_REVISED_DIR / f"{stem}.png"
-    figure.savefig(path, dpi=300, bbox_inches="tight")
-    figure.savefig(FINAL_PAPER_REVISED_DIR / f"{stem}.pdf", bbox_inches="tight")
+    figure.savefig(path, dpi=200, bbox_inches="tight", pad_inches=0.05)
+    figure.savefig(FINAL_PAPER_REVISED_DIR / f"{stem}.pdf", bbox_inches="tight", pad_inches=0.05)
     plt.close(figure)
     return path
 

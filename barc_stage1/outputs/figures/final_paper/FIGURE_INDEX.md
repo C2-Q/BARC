@@ -1,26 +1,37 @@
 # Final Paper Figure Index
 
-This index maps the manuscript-facing LaTeX figure paths to the generated artifact files kept in this repository.
+This folder holds the nine figures referenced by the manuscript. File names
+match the LaTeX `\includegraphics{figures/final_paper/<name>.pdf}` paths.
 
 ## Main-Text Figures
 
-- `figures/delta_max_illustration.pdf`
-- `figures/final_paper/predictor_comparison_final.pdf`
-- `figures/final_paper/incremental_predictive_gain_final.pdf`
-- `figures/final_paper/structure_to_execution_chain_empirical_final.pdf`
-- `figures/final_paper/delta_max_vs_slowdown_final.pdf`
-- `figures/final_paper/lower_bound_vs_actual_final.pdf`
-- `figures/final_paper/qft_vs_other_real_traces_final.pdf`
-- `figures/final_paper/real_trace_scaling_final.pdf`
-- `figures/final_paper/qft_approximation_reduced_grid_final.pdf`
+| File | Manuscript label |
+| --- | --- |
+| `predictor_comparison.pdf` | `fig:predictor_comparison` |
+| `incremental_predictive_gain.pdf` | `fig:incremental_gain` |
+| `structure_execution_chain.pdf` | `fig:empirical_chain` |
+| `lower_bound_vs_actual.pdf` | `fig:lower_bound` |
+| `qft_vs_real_traces.pdf` | `fig:qft_vs_real` |
+| `real_trace_scaling.pdf` | `fig:real_scaling` |
+| `qft_approximation.pdf` | `fig:qft_approx` |
 
 ## Appendix Figures
 
-- `figures/final_paper/robustness_stochastic_routing_summary_final.pdf`
-- `figures/final_paper/lower_bound_gap_cases_final.pdf`
+| File | Manuscript label |
+| --- | --- |
+| `appendix_robustness_supply_routing.pdf` | `fig:appendix_robustness_supply_routing` |
+| `appendix_gap_cases.pdf` | `fig:appendix_gap_cases` |
 
-## Notes
+## Reproducing
 
-- The main pipeline writes paper-facing PNG figures to `barc_stage1/outputs/figures/`.
-- Final manuscript PDFs are written to `barc_stage1/outputs/figures/final_paper/`.
-- Use `python barc_stage1/scripts/prepare_submission_bundle.py` to assemble a clean `submission_bundle/` tree for paper submission.
+The single command that regenerates and republishes every figure in this
+folder is documented in the repository root `README.md` (see the
+*Reproducibility* section). Internally it runs the upstream generator
+scripts and then `scripts/publish_paper_figures.py`, which copies each
+figure here under its manuscript name.
+
+## Other Figures
+
+`figures/delta_max_illustration.{pdf,png}` (one level up) is referenced
+separately as the project's key illustrative figure on the README and
+remains outside this folder.

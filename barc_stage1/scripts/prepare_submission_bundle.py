@@ -9,27 +9,19 @@ REPO_ROOT = Path(__file__).resolve().parents[2]
 ARTIFACT_ROOT = REPO_ROOT / "barc_stage1"
 OUTPUT_ROOT = ARTIFACT_ROOT / "outputs"
 
+_FINAL_PAPER_DIR = OUTPUT_ROOT / "figures" / "final_paper"
+
 FIGURE_FILES = [
     ("figures/delta_max_illustration.pdf", OUTPUT_ROOT / "figures" / "delta_max_illustration.pdf"),
-    ("figures/final_paper/predictor_comparison_final.pdf", OUTPUT_ROOT / "figures" / "final_paper" / "predictor_comparison_final.pdf"),
-    ("figures/final_paper/incremental_predictive_gain_final.pdf", OUTPUT_ROOT / "figures" / "final_paper" / "incremental_predictive_gain_final.pdf"),
-    (
-        "figures/final_paper/structure_to_execution_chain_empirical_final.pdf",
-        OUTPUT_ROOT / "figures" / "final_paper" / "structure_to_execution_chain_empirical_final.pdf",
-    ),
-    ("figures/final_paper/delta_max_vs_slowdown_final.pdf", OUTPUT_ROOT / "figures" / "final_paper" / "delta_max_vs_slowdown_final.pdf"),
-    ("figures/final_paper/lower_bound_vs_actual_final.pdf", OUTPUT_ROOT / "figures" / "final_paper" / "lower_bound_vs_actual_final.pdf"),
-    ("figures/final_paper/qft_vs_other_real_traces_final.pdf", OUTPUT_ROOT / "figures" / "final_paper" / "qft_vs_other_real_traces_final.pdf"),
-    ("figures/final_paper/real_trace_scaling_final.pdf", OUTPUT_ROOT / "figures" / "final_paper" / "real_trace_scaling_final.pdf"),
-    (
-        "figures/final_paper/qft_approximation_reduced_grid_final.pdf",
-        OUTPUT_ROOT / "figures" / "final_paper" / "qft_approximation_reduced_grid_final.pdf",
-    ),
-    (
-        "figures/final_paper/robustness_stochastic_routing_summary_final.pdf",
-        OUTPUT_ROOT / "figures" / "final_paper" / "robustness_stochastic_routing_summary_final.pdf",
-    ),
-    ("figures/final_paper/lower_bound_gap_cases_final.pdf", OUTPUT_ROOT / "figures" / "final_paper" / "lower_bound_gap_cases_final.pdf"),
+    ("figures/final_paper/predictor_comparison.pdf", _FINAL_PAPER_DIR / "predictor_comparison.pdf"),
+    ("figures/final_paper/incremental_predictive_gain.pdf", _FINAL_PAPER_DIR / "incremental_predictive_gain.pdf"),
+    ("figures/final_paper/structure_execution_chain.pdf", _FINAL_PAPER_DIR / "structure_execution_chain.pdf"),
+    ("figures/final_paper/lower_bound_vs_actual.pdf", _FINAL_PAPER_DIR / "lower_bound_vs_actual.pdf"),
+    ("figures/final_paper/qft_vs_real_traces.pdf", _FINAL_PAPER_DIR / "qft_vs_real_traces.pdf"),
+    ("figures/final_paper/real_trace_scaling.pdf", _FINAL_PAPER_DIR / "real_trace_scaling.pdf"),
+    ("figures/final_paper/qft_approximation.pdf", _FINAL_PAPER_DIR / "qft_approximation.pdf"),
+    ("figures/final_paper/appendix_robustness_supply_routing.pdf", _FINAL_PAPER_DIR / "appendix_robustness_supply_routing.pdf"),
+    ("figures/final_paper/appendix_gap_cases.pdf", _FINAL_PAPER_DIR / "appendix_gap_cases.pdf"),
 ]
 
 TABLE_FILES = [

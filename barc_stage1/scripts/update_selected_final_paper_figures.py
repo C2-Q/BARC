@@ -92,7 +92,7 @@ def update_lower_bound_vs_actual(lower_bound_df: pd.DataFrame) -> Path:
     axes[1].tick_params(axis="both", labelsize=8)
 
     # Manual layout is more stable than constrained_layout when colorbars are used.
-    figure.subplots_adjust(left=0.075, right=0.985, bottom=0.20, top=0.96, wspace=0.30)
+    figure.subplots_adjust(left=0.075, right=0.985, bottom=0.20, top=0.96, wspace=0.42)
 
     return _save_final_figure(figure, "lower_bound_vs_actual_final")
 

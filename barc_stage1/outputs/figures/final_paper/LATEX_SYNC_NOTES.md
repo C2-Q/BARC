@@ -1,21 +1,26 @@
 # LaTeX Sync Notes
 
-The paper draft uses `\includegraphics{figures/...}` paths, while the artifact generates figures under `barc_stage1/outputs/figures/`.
+The paper draft uses `\includegraphics{figures/final_paper/<name>.pdf}`
+paths; the artifact stages those exact filenames in this folder.
 
 ## Recommended Workflow
 
-1. Rebuild artifact outputs from the repository root:
-   `cd barc_stage1 && python scripts/run_qce_paper.py`
-2. Prepare a manuscript-facing asset bundle:
-   `python barc_stage1/scripts/prepare_submission_bundle.py`
-3. Copy or symlink the generated `submission_bundle/figures/` subtree into the LaTeX project so that the paper sees the expected `figures/...` paths.
+1. From the artifact root, run the reproduce sequence documented in the
+   repository `README.md` *Reproduce the paper figures* section. The final
+   step, `python scripts/publish_paper_figures.py`, copies and renames each
+   figure here under its manuscript name.
+2. Optional: assemble a clean manuscript bundle for handoff:
+   `python barc_stage1/scripts/prepare_submission_bundle.py`. The resulting
+   `submission_bundle/figures/` subtree mirrors the LaTeX include paths.
+3. Copy or symlink `submission_bundle/figures/` (or this folder directly)
+   into the LaTeX project so the paper sees the expected paths.
 
-## Current Figure Mapping
+## Figure -> Manuscript Label
 
-- `figures/delta_max_illustration.pdf` comes from `barc_stage1/outputs/figures/delta_max_illustration.pdf`
-- `figures/final_paper/*.pdf` comes from `barc_stage1/outputs/figures/final_paper/*.pdf`
-- Appendix robustness figures can be regenerated from the summary CSVs with `python barc_stage1/scripts/build_appendix_robustness_figure.py`
+See `FIGURE_INDEX.md` in this folder for the full table.
 
 ## Scope
 
-This note only covers the manuscript-facing figure paths. Numerical claim tracing is documented in the repository root `README.md` and in the generated `submission_bundle/MANIFEST.md`.
+This note only covers manuscript-facing figure paths. Numerical claim
+tracing is documented in the repository root `README.md` and in the
+generated `submission_bundle/MANIFEST.md`.

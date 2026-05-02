@@ -101,6 +101,25 @@ contains exactly the figures used by the paper. See
 [`FIGURE_INDEX.md`](barc_stage1/outputs/figures/final_paper/FIGURE_INDEX.md)
 for the file -> manuscript-label mapping.
 
+### Reproduce the workload-family extension
+
+The workload-family extension adds three first-class circuit-derived families
+(carry-lookahead adder, modular-arithmetic block, QAOA MaxCut) alongside the existing
+ripple adder, integer multiplier, and QFT traces. To regenerate the
+workload-family tables and rebuild Fig. 6 and Fig. 7 in place:
+
+```bash
+bash barc_stage1/scripts/reproduce_real_workload_families.sh
+```
+
+This script does not modify the compressibility-family evaluation, the
+lower-bound validation tables, or any other paper figure. See
+[`docs/revision_notes_real_benchmarks.md`](barc_stage1/docs/revision_notes_real_benchmarks.md)
+for variant labels, grid choices, synthesis precision, and the
+`results/` -> `outputs/tables/` path mapping. LaTeX snippets implied by the
+extension are collected in
+[`docs/paper_text_patches.md`](barc_stage1/docs/paper_text_patches.md).
+
 ### Tests
 
 ```bash

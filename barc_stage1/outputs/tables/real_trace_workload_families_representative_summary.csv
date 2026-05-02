@@ -1,0 +1,7 @@
+workload_family,workload_name,representative_instance,size_n,slack_ratio,mean_delta_max,mean_peak_T_demand,stall_rate,slowdown_rate,grid_type,synthesis_precision
+ripple_adder,Ripple adder,adder_n8,8,0.3571428571428571,0.0,2.0,0.0089285714285714,0.0,full,qiskit_transpile_optimization_level_1_seed_42_basis_h_s_sdg_cx_t_tdg
+multiplier,Multiplier,multiplier_n8,8,0.3462915601023018,5.0,8.0,0.7678571428571429,0.0,full,qiskit_transpile_optimization_level_1_seed_42_basis_h_s_sdg_cx_t_tdg
+cla_adder,CLA adder,cla_adder_n8,8,0.8061224489795918,46.142857142857146,16.0,0.9642857142857144,0.0625,full,qiskit_transpile_optimization_level_1_seed_42_basis_h_s_sdg_cx_t_tdg
+modular_multiplier,Mod. arith. block,modular_multiplier_n8,8,0.3571428571428571,0.0,2.0,0.0089285714285714,0.0,full,qiskit_transpile_optimization_level_1_seed_42_basis_h_s_sdg_cx_t_tdg
+qaoa_maxcut,QAOA,qaoa_maxcut_n8_p2_erdos_renyi_dense_s0,8,0.6632083852914928,43037.6,6.0,0.64,0.28,reduced,qiskit_transpile_optimization_level_1_seed_42_basis_h_s_sdg_cx_t_tdg
+exact_qft,Exact QFT,qft_n8,8,0.6318274656335521,43395.857142857145,6.0,0.4642857142857143,0.2053571428571428,full,qiskit_transpile_optimization_level_1_seed_42_basis_h_s_sdg_cx_t_tdg

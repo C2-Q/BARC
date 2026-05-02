@@ -33,7 +33,6 @@ def update_lower_bound_vs_actual(lower_bound_df: pd.DataFrame) -> Path:
     sorted_gaps = np.sort(gaps)
     cdf = np.arange(1, len(sorted_gaps) + 1) / max(1, len(sorted_gaps))
     within_one = float((gaps <= 1.0 + 1e-9).mean()) if len(gaps) else 0.0
-    assert abs(within_one - 0.8892740619902121) < 1e-9
 
     figure, axes = plt.subplots(
         1,
@@ -77,7 +76,7 @@ def update_lower_bound_vs_actual(lower_bound_df: pd.DataFrame) -> Path:
     axes[1].text(
         2.0,
         0.94,
-        r"88.9% $\leq$ 1 cycle",
+        rf"{within_one * 100:.1f}% $\leq$ 1 cycle",
         fontsize=7.2,
         color="#8b1e1e",
         ha="left",

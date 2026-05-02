@@ -101,6 +101,54 @@ contains exactly the figures used by the paper. See
 [`FIGURE_INDEX.md`](barc_stage1/outputs/figures/final_paper/FIGURE_INDEX.md)
 for the file -> manuscript-label mapping.
 
+#### Per-figure generator map (final_paper/)
+
+Each final_paper figure traces back to a specific script in the chain above.
+Re-running just one of these regenerates only its target figure:
+
+| Final-paper figure | Generator script |
+| --- | --- |
+| `predictor_comparison.{pdf,png}` | `scripts/build_final_paper_revised_figures.py` |
+| `incremental_predictive_gain.{pdf,png}` | `scripts/run_qce_paper.py` |
+| `structure_execution_chain.{pdf,png}` | `scripts/run_qce_paper.py` |
+| `lower_bound_vs_actual.{pdf,png}` | `scripts/update_selected_final_paper_figures.py` (3-policy CSV: `static_min`, `capacity_aware_static`, `smoothed`) |
+| `qft_vs_real_traces.{pdf,png}` | `scripts/build_workload_family_figures.py` (writes directly to `final_paper/`) |
+| `real_trace_scaling.{pdf,png}` | `scripts/build_workload_family_figures.py` (writes directly to `final_paper/`) |
+| `qft_approximation.{pdf,png}` | `scripts/update_selected_final_paper_figures.py` |
+| `appendix_robustness_supply_routing.{pdf,png}` | `scripts/build_appendix_robustness_figure.py` |
+| `appendix_gap_cases.{pdf,png}` | `scripts/run_posthoc_analysis.py` |
+
+> **Note.** `scripts/run_quota_compressibility_validation.py` is an exploratory
+> 4-policy probe (adds `delivery_aware_slack` / `sigma_quota` alongside the
+> three published policies) and **is not part of the final-paper figure
+> chain**. Running it overwrites `outputs/tables/lower_bound_validation.csv`
+> with the 4-policy table. The `lower_bound_vs_actual` figure shown in the
+> paper uses the 3-policy CSV produced by `run_qce_paper.py` (88.9% of
+> instances within one cycle of the lower bound). If you have run the 4-policy
+> probe and want to revert, restore the 3-policy CSV with
+> `git restore barc_stage1/outputs/tables/lower_bound_validation.csv` and
+> re-run `scripts/update_selected_final_paper_figures.py` followed by
+> `scripts/publish_paper_figures.py`.
+
+### Reproduce the workload-family extension
+
+The workload-family extension adds three first-class circuit-derived families
+(carry-lookahead adder, modular-arithmetic block, QAOA MaxCut) alongside the existing
+ripple adder, integer multiplier, and QFT traces. To regenerate the
+workload-family tables and rebuild Fig. 6 and Fig. 7 in place:
+
+```bash
+bash barc_stage1/scripts/reproduce_real_workload_families.sh
+```
+
+This script does not modify the compressibility-family evaluation, the
+lower-bound validation tables, or any other paper figure. See
+[`docs/revision_notes_real_benchmarks.md`](barc_stage1/docs/revision_notes_real_benchmarks.md)
+for variant labels, grid choices, synthesis precision, and the
+`results/` -> `outputs/tables/` path mapping. LaTeX snippets implied by the
+extension are collected in
+[`docs/paper_text_patches.md`](barc_stage1/docs/paper_text_patches.md).
+
 ### Tests
 
 ```bash

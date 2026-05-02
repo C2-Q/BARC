@@ -188,7 +188,7 @@ in workloads derived directly from algorithmic circuits.
 ## Before revised Fig. 6
 
 ```
-Figure~\ref{fig:qft_vs_real} compares representative instances from each
+Figure~\ref{fig:qft_vs_real} compares representative $n=8$ instances from each
 family in structural--system space. The ripple-carry adder remains a
 low-pressure workload, the integer multiplier exposes intermediate arithmetic
 delivery pressure, the carry-lookahead adder tests whether a more parallel
@@ -207,34 +207,51 @@ mixer layers and not by reuse of the QFT trace.
 **Caption:**
 
 ```
-\caption{Representative circuit workloads in structural--system space. The
-comparison spans serial arithmetic, parallel arithmetic, modular-arithmetic,
-non-arithmetic optimisation, and QFT. The left panel reports slack ratio,
-while the right panel reports mean $\Delta_{\max}$ under the bounded-delivery
-scan using a symmetric logarithmic scale. All values use the
-$\sigma_{\mathrm{static}}$ policy; CLA adder, multiplier, ripple adder, exact
-QFT and modular-arithmetic block use the full bounded-delivery grid, while
-QAOA MaxCut uses the reduced grid (see workload paragraph).}
+\caption{Representative $n=8$ circuit workloads in structural--system space.
+The comparison spans serial arithmetic (Ripple, Multiplier), parallel
+arithmetic (CLA), modular-arithmetic, non-arithmetic optimisation (QAOA), and
+QFT. The left panel reports slack ratio; the right panel reports mean
+$\Delta_{\max}$ on a symmetric logarithmic axis (zero values are annotated
+explicitly). All values use the $\sigma_{\mathrm{static}}$ policy and average
+$\Delta_{\max}$ over unique $C$ values. Ripple, CLA, Multiplier, modular-
+arithmetic block, and exact QFT use the full bounded-delivery grid; the QAOA
+bar uses the reduced grid (the dense $p=2$, seed-0 instance) -- see the
+workload paragraph for grid definitions.}
 ```
 
 ---
+
+## Before revised Fig. 7
+
+```
+Figure~\ref{fig:real_scaling} shows scaling behavior for the arithmetic and
+modular-arithmetic workload families. Ripple-carry addition remains stable
+across the evaluated range: slack ratio stays near~0.357 and mean
+$\Delta_{\max}$ remains zero. The multiplier also stays in a low-slack
+regime, but its delivery pressure grows gradually with $n$. The carry-
+lookahead adder behaves differently: its slack ratio and mean $\Delta_{\max}$
+both increase with problem size, showing that parallel-prefix arithmetic
+creates more scheduling freedom but also stronger delivery pressure under a
+depth-oriented schedule. The modular-arithmetic block remains close to the
+ripple-carry profile because its construction is based on ripple-carry
+building blocks.
+```
 
 ## After revised Fig. 7
 
 **Caption:**
 
 ```
-\caption{Scaling of structural flexibility and delivery pressure across the
-workload spectrum. The left panel shows slack ratio as problem size
-increases; the right panel shows mean $\Delta_{\max}$ under the
-bounded-delivery scan. Ripple-carry addition remains a low-pressure
-reference, while carry-lookahead addition exposes implementation-level
-parallelism, the modular-arithmetic block reports the controlled
-add-subtract-modulus chain (structural surrogate, not a verified mod-$N$
-multiplier), and QAOA MaxCut shows how graph-structured optimisation
-workloads introduce delivery pressure outside arithmetic. All values use the
-$\sigma_{\mathrm{static}}$ policy; full vs reduced grid choices match the
-workload paragraph.}
+\caption{Scaling behavior of arithmetic and modular-arithmetic workload
+families under $\sigma_{\mathrm{static}}$. The left panel shows slack ratio
+as problem size increases; the right panel shows mean $\Delta_{\max}$ using a
+symmetric logarithmic scale, with zero-pressure workloads shown at zero.
+Ripple-carry addition and the modular-arithmetic block remain delivery-
+light, the multiplier shows gradually increasing delivery pressure, and the
+Kogge--Stone carry-lookahead adder gains both structural flexibility and
+delivery pressure with scale. QAOA is omitted from this scaling figure
+because its rotation-synthesis-driven delivery pressure is shown separately
+in Fig.~\ref{fig:qft_vs_real}.}
 ```
 
 After Fig. 7 keep the QFT approximation paragraph; introduce it with:

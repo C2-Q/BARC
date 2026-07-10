@@ -6,7 +6,7 @@ This repository accompanies the paper:
 
 `When T-Depth Misleads: Predictive Modeling of Quantum Execution Stalls under Bounded Magic-State Delivery`
 
-This paper has been submitted to QCE 2026. The full manuscript PDF is included
+This paper has been accepted by QCE 2026. The full manuscript PDF is included
 at [`barc_stage1/docs/When_T_Depth_Misleads.pdf`](barc_stage1/docs/When_T_Depth_Misleads.pdf).
 
 The artifact studies how circuit dependency structure interacts with a fixed delivery rate `C` and a fixed buffer capacity `B`, and packages the paper-facing figures and tables used by the manuscript.
